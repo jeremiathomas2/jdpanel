@@ -1,0 +1,36 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Databases — JDPanel{% endblock %}
+{% block breadcrumb %}Databases{% endblock %}
+
+{% block content %}
+    <div class="page-view active">
+      <div class="page-header">
+        <div><div class="page-title">Database Management</div><div class="page-subtitle">MySQL / MariaDB databases and users</div></div>
+        <button class="btn btn-primary"><i class="fas fa-plus"></i> Create Database</button>
+      </div>
+      
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Database Name</th><th>Owner</th><th>Size</th><th>Tables</th><th>Charset</th><th>Actions</th></tr></thead>
+          <tbody>
+            {% for db in databases %}
+            <tr>
+              <td><strong>{{ db.name }}</strong></td>
+              <td>{{ db.owner }}</td>
+              <td>{{ db.size }}</td>
+              <td>{{ db.tables_count }}</td>
+              <td>{{ db.charset }}</td>
+              <td>
+                <button class="btn btn-outline btn-sm"><i class="fas fa-external-link-alt"></i> phpMyAdmin</button> 
+                <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" style="text-align:center">No databases found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+{% endblock %}

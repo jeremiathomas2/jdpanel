@@ -17,78 +17,28 @@
       </a>
     </div>
 
-    <!-- SERVER -->
-    <div class="sidebar-section-label">Server</div>
-
-    <div class="nav-item" id="nav-server">
-      <div class="nav-link" onclick="toggleMenu('nav-server')">
-        <div class="nav-icon"><i class="fas fa-server"></i></div>
-        <span class="nav-label">Server Management</span>
-        <i class="fas fa-chevron-down nav-chevron"></i>
-        <div class="nav-tooltip">Server</div>
-      </div>
-      <div class="nav-submenu">
-        <div class="sub-link" onclick="navigate('server-info',this)"><div class="sub-dot"></div>Server Info</div>
-        <div class="sub-link" onclick="navigate('services',this)"><div class="sub-dot"></div>Services Control</div>
-        <div class="sub-link" onclick="navigate('cron',this)"><div class="sub-dot"></div>Cron Jobs</div>
-        <div class="sub-link" onclick="navigate('logs',this)"><div class="sub-dot"></div>System Logs</div>
-        <div class="sub-link" onclick="navigate('packages-update',this)"><div class="sub-dot"></div>Package Updates</div>
-      </div>
-    </div>
-
-    <div class="nav-item" id="nav-monitor">
-      <div class="nav-link" onclick="toggleMenu('nav-monitor')">
-        <div class="nav-icon"><i class="fas fa-chart-area"></i></div>
-        <span class="nav-label">Resource Monitor</span>
-        <i class="fas fa-chevron-down nav-chevron"></i>
-        <div class="nav-tooltip">Monitor</div>
-      </div>
-      <div class="nav-submenu">
-        <div class="sub-link" onclick="navigate('resources',this)"><div class="sub-dot"></div>CPU / RAM / Disk</div>
-        <div class="sub-link" onclick="navigate('network',this)"><div class="sub-dot"></div>Network Traffic</div>
-        <div class="sub-link" onclick="navigate('processes',this)"><div class="sub-dot"></div>Process Viewer</div>
-      </div>
-    </div>
-
-    <!-- HOSTING -->
-    <div class="sidebar-section-label">Hosting</div>
-
-    <div class="nav-item" id="nav-websites">
-      <div class="nav-link" onclick="toggleMenu('nav-websites')">
+    <div class="nav-item">
+      <a href="{% url 'dashboard:websites' %}" class="nav-link {% if request.resolver_match.url_name == 'websites' %}active{% endif %}">
         <div class="nav-icon"><i class="fas fa-globe"></i></div>
         <span class="nav-label">Websites</span>
-        <i class="fas fa-chevron-down nav-chevron"></i>
         <div class="nav-tooltip">Websites</div>
-      </div>
-      <div class="nav-submenu">
-        <div class="sub-link" onclick="navigate('websites',this)"><div class="sub-dot"></div>All Websites</div>
-        <div class="sub-link" onclick="navigate('domains',this)"><div class="sub-dot"></div>Domains</div>
-        <div class="sub-link" onclick="navigate('subdomains',this)"><div class="sub-dot"></div>Subdomains</div>
-        <div class="sub-link" onclick="navigate('parked',this)"><div class="sub-dot"></div>Parked Domains</div>
-        <div class="sub-link" onclick="navigate('redirects',this)"><div class="sub-dot"></div>Redirects</div>
-      </div>
+      </a>
     </div>
 
     <div class="nav-item">
-      <div class="nav-link" onclick="navigate('filemanager',this)">
-        <div class="nav-icon"><i class="fas fa-folder-open"></i></div>
-        <span class="nav-label">File Manager</span>
-        <div class="nav-tooltip">Files</div>
-      </div>
-    </div>
-
-    <div class="nav-item" id="nav-db">
-      <div class="nav-link" onclick="toggleMenu('nav-db')">
+      <a href="{% url 'dashboard:databases' %}" class="nav-link {% if request.resolver_match.url_name == 'databases' %}active{% endif %}">
         <div class="nav-icon"><i class="fas fa-database"></i></div>
         <span class="nav-label">Databases</span>
-        <i class="fas fa-chevron-down nav-chevron"></i>
         <div class="nav-tooltip">Databases</div>
-      </div>
-      <div class="nav-submenu">
-        <div class="sub-link" onclick="navigate('databases',this)"><div class="sub-dot"></div>MySQL / MariaDB</div>
-        <div class="sub-link" onclick="navigate('db-users',this)"><div class="sub-dot"></div>DB Users</div>
-        <div class="sub-link" onclick="navigate('phpmyadmin',this)"><div class="sub-dot"></div>phpMyAdmin</div>
-      </div>
+      </a>
+    </div>
+
+    <div class="nav-item">
+      <a href="{% url 'dashboard:emails' %}" class="nav-link {% if request.resolver_match.url_name == 'emails' %}active{% endif %}">
+        <div class="nav-icon"><i class="fas fa-envelope"></i></div>
+        <span class="nav-label">Emails</span>
+        <div class="nav-tooltip">Emails</div>
+      </a>
     </div>
 
     <!-- SERVICES -->

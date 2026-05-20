@@ -1,0 +1,37 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Emails — JDPanel{% endblock %}
+{% block breadcrumb %}Emails{% endblock %}
+
+{% block content %}
+    <div class="page-view active">
+      <div class="page-header">
+        <div><div class="page-title">Email Hosting</div><div class="page-subtitle">Postfix + Dovecot + Roundcube mail stack</div></div>
+        <button class="btn btn-primary"><i class="fas fa-plus"></i> Create Email Account</button>
+      </div>
+      
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Email Address</th><th>Domain</th><th>Quota</th><th>Used</th><th>DKIM</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            {% for email in emails %}
+            <tr>
+              <td><strong>{{ email.email }}</strong></td>
+              <td>{{ email.domain }}</td>
+              <td>{{ email.quota }}</td>
+              <td>{{ email.used }}<div class="mini-bar"><div class="mini-fill" style="width:{{ email.used_percent }}%;background:#3B82F6"></div></div></td>
+              <td><span class="badge badge-success">{{ email.dkim_status }}</span></td>
+              <td><span class="badge badge-success">{{ email.status }}</span></td>
+              <td>
+                <button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> 
+                <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" style="text-align:center">No email accounts found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+{% endblock %}

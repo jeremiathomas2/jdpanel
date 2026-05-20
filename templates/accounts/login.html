@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — JDPanel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--body-bg);
+            height: 100vh;
+            margin: 0;
+        }
+        .login-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            animation: fadeUp 0.4s ease;
+        }
+        .login-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .login-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .login-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .btn-login {
+            width: 100%;
+            justify-content: center;
+            padding: 12px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .alert-error {
+            background: var(--badge-danger);
+            color: var(--badge-danger-text);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="login-logo">
+            <div class="logo-icon" style="width: 44px; height: 44px; font-size: 20px;">JD</div>
+            <div class="logo-text" style="font-size: 22px;">JD<span>Panel</span></div>
+        </div>
+        
+        <div class="login-header">
+            <div class="login-title">Welcome Back</div>
+            <div class="login-subtitle">Please sign in to manage your server</div>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert-error">
+                    <i class="fas fa-circle-exclamation" style="margin-right: 8px;"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label">Email / Username</label>
+                <input type="text" name="username" class="form-control" placeholder="admin@jpanel.cloud" required autofocus>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); cursor: pointer;">
+                    <input type="checkbox" style="accent-color: var(--accent);"> Remember me
+                </label>
+                <a href="#" style="font-size: 13px; color: var(--accent); text-decoration: none; font-weight: 700;">Forgot password?</a>
+            </div>
+            <button type="submit" class="btn btn-primary btn-login">
+                Sign In <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+            </button>
+        </form>
+    </div>
+</body>
+</html>
