@@ -1,0 +1,14 @@
+django>=5.0
+mysqlclient
+django-rest-framework
+celery
+redis
+django-otp
+qrcode
+psutil
+paramiko
+cryptography
+requests
+django-cors-headers
+django-filter
+django-extensions

@@ -1,0 +1,46 @@
+{% extends 'base/base.html' %}
+
+{% block title %}DNS Zones — JDPanel{% endblock %}
+{% block breadcrumb %}DNS Zones{% endblock %}
+
+{% block content %}
+<div class="page-view active">
+  <div class="page-header">
+    <div>
+      <div class="page-title">DNS Zones</div>
+      <div class="page-subtitle">Manage DNS zones for your domains</div>
+    </div>
+    <button class="btn btn-primary"><i class="fas fa-plus"></i> Add Zone</button>
+  </div>
+  
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Domain</th>
+          <th>Serial</th>
+          <th>Records</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for zone in zones %}
+        <tr>
+          <td><strong>{{ zone.domain }}</strong></td>
+          <td>{{ zone.serial }}</td>
+          <td><span class="badge badge-info">{{ zone.records.count }}</span></td>
+          <td>{{ zone.created_at|date:"Y-m-d" }}</td>
+          <td>
+            <a href="{% url 'dns:record_list' zone.id %}" class="btn btn-outline btn-sm"><i class="fas fa-list"></i> Records</a>
+            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" style="text-align:center">No DNS zones found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

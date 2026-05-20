@@ -20,5 +20,16 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('apps.accounts.urls')),
+    path('websites/', include('apps.websites.urls')),
+    path('databases/', include('apps.databases.urls')),
+    path('mail/', include('apps.mail.urls')),
+    path('dns/', include('apps.dns.urls')),
+    path('ssl/', include('apps.ssl.urls')),
+    path('ftp/', include('apps.ftp.urls')),
+    path('security/', include('apps.security.urls')),
+    path('backups/', include('apps.backups.urls')),
+    path('packages/', include('apps.packages.urls')),
+    path('billing/', include('apps.billing.urls')),
+    path('api/', include('apps.api.urls')),
     path('', include('apps.dashboard.urls')),
 ]

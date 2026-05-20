@@ -1,0 +1,40 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Add Website — JDPanel{% endblock %}
+{% block breadcrumb %}Add Website{% endblock %}
+
+{% block content %}
+    <div class="page-view active">
+      <div class="page-header">
+        <div><div class="page-title">Add New Website</div><div class="page-subtitle">Configure a new virtual host on this server</div></div>
+      </div>
+      
+      <div class="card" style="max-width: 600px;">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 700;">Domain Name</label>
+                    {{ form.domain }}
+                    {% if form.domain.errors %}
+                        <div style="color: red; font-size: 12px; margin-top: 4px;">{{ form.domain.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 700;">PHP Version</label>
+                    {{ form.php_version }}
+                    {% if form.php_version.errors %}
+                        <div style="color: red; font-size: 12px; margin-top: 4px;">{{ form.php_version.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-top: 24px;">
+                    <button type="submit" class="btn btn-primary">Create Website</button>
+                    <a href="{% url 'websites:list' %}" class="btn btn-outline">Cancel</a>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Create Email Account — JDPanel{% endblock %}
+{% block breadcrumb %}Create Email Account{% endblock %}
+
+{% block content %}
+    <div class="page-view active">
+      <div class="page-header">
+        <div><div class="page-title">Create Email Account</div><div class="page-subtitle">Add a new mailbox to your domain</div></div>
+      </div>
+      
+      <div class="card" style="max-width: 600px;">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 700;">Email Address</label>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="text" name="email_prefix" class="form-control" placeholder="info" required style="flex: 1;">
+                        <span style="font-weight: 700;">@</span>
+                        <select name="website" class="form-control" required style="flex: 1;">
+                            {% for website in websites %}
+                                <option value="{{ website.id }}">{{ website.domain }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 700;">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 700;">Quota (MB)</label>
+                    <input type="number" name="quota" class="form-control" value="512" min="1" required>
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-top: 24px;">
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                    <a href="{% url 'mail:list' %}" class="btn btn-outline">Cancel</a>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+{% endblock %}

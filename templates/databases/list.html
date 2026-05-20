@@ -1,0 +1,74 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Databases — JDPanel{% endblock %}
+{% block breadcrumb %}Databases{% endblock %}
+
+{% block content %}
+    <div class="page-view active">
+      <div class="page-header">
+        <div><div class="page-title">Databases</div><div class="page-subtitle">Manage MySQL/MariaDB databases and users</div></div>
+        <div style="display: flex; gap: 8px;">
+            <a href="{% url 'databases:create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Create Database</a>
+            <a href="{% url 'databases:user_create' %}" class="btn btn-outline"><i class="fas fa-user-plus"></i> Create DB User</a>
+        </div>
+      </div>
+      
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card-header"><div class="card-title">Databases</div></div>
+        <div class="table-wrap">
+            <table>
+              <thead><tr><th>Database Name</th><th>Type</th><th>Assigned Users</th><th>Actions</th></tr></thead>
+              <tbody>
+                {% for db in databases %}
+                <tr>
+                  <td><strong>{{ db.name }}</strong></td>
+                  <td><span class="badge badge-info">{{ db.db_type|upper }}</span></td>
+                  <td>
+                    {% for user in db.assigned_users.all %}
+                        <span class="badge badge-outline">{{ user.username }}</span>
+                    {% empty %}
+                        <span class="text-muted">No users</span>
+                    {% endfor %}
+                  </td>
+                  <td>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" style="text-align:center">No databases found.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Database Users</div></div>
+        <div class="table-wrap">
+            <table>
+              <thead><tr><th>Username</th><th>Assigned Databases</th><th>Actions</th></tr></thead>
+              <tbody>
+                {% for user in db_users %}
+                <tr>
+                  <td><strong>{{ user.username }}</strong></td>
+                  <td>
+                    {% for db in user.databases.all %}
+                        <span class="badge badge-outline">{{ db.name }}</span>
+                    {% empty %}
+                        <span class="text-muted">No databases</span>
+                    {% endfor %}
+                  </td>
+                  <td>
+                    <button class="btn btn-outline btn-sm"><i class="fas fa-key"></i></button>
+                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" style="text-align:center">No database users found.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+{% endblock %}

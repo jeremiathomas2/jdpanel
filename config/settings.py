@@ -37,9 +37,27 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # Third party
+    'rest_framework',
+    'django_otp',
+    'django_otp.plugins.otp_totp',
+    
     # Apps
     'apps.accounts',
     'apps.dashboard',
+    'apps.websites',
+    'apps.databases',
+    'apps.mail',
+    'apps.dns',
+    'apps.ssl',
+    'apps.ftp',
+    'apps.backups',
+    'apps.security',
+    'apps.monitoring',
+    'apps.packages',
+    'apps.billing',
+    'apps.api',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +66,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware', # Add this
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -116,6 +135,11 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+AUTHENTICATION_BACKENDS = [
+    'apps.accounts.backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'dashboard:index'

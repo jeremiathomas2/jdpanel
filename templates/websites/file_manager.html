@@ -1,0 +1,53 @@
+{% extends 'base/base.html' %}
+
+{% block title %}File Manager — JDPanel{% endblock %}
+{% block breadcrumb %}File Manager{% endblock %}
+
+{% block content %}
+    <div class="page-view active">
+      <div class="page-header">
+        <div><div class="page-title">File Manager</div><div class="page-subtitle">Currently in: /{{ current_path }}</div></div>
+        <div style="display: flex; gap: 8px;">
+            <button class="btn btn-outline btn-sm"><i class="fas fa-upload"></i> Upload</button>
+            <button class="btn btn-outline btn-sm"><i class="fas fa-folder-plus"></i> New Folder</button>
+        </div>
+      </div>
+      
+      <div class="table-wrap">
+        <table class="table-hover">
+          <thead><tr><th>Name</th><th>Size</th><th>Last Modified</th><th>Actions</th></tr></thead>
+          <tbody>
+            {% if parent_path is not None %}
+            <tr>
+              <td><a href="?path={{ parent_path }}"><i class="fas fa-level-up-alt"></i> ..</a></td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            {% endif %}
+            
+            {% for item in items %}
+            <tr>
+              <td>
+                {% if item.is_dir %}
+                <a href="?path={{ item.path }}"><i class="fas fa-folder" style="color: #fbbf24; margin-right: 8px;"></i> {{ item.name }}</a>
+                {% else %}
+                <i class="fas fa-file" style="color: #94a3b8; margin-right: 8px;"></i> {{ item.name }}
+                {% endif %}
+              </td>
+              <td>{% if not item.is_dir %}{{ item.size|filesizeformat }}{% else %}-{% endif %}</td>
+              <td>{{ item.modified }}</td>
+              <td style="white-space:nowrap">
+                <button class="btn btn-outline btn-sm"><i class="fas fa-download"></i></button>
+                <button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button>
+                <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" style="text-align:center">This directory is empty.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+{% endblock %}

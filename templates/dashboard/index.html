@@ -45,21 +45,21 @@
         </div>
         <div class="stat-card" style="--stat-color:#EF4444;--icon-bg:rgba(239,68,68,0.12);--icon-color:#f87171">
           <div class="stat-icon"><i class="fas fa-microchip"></i></div>
-          <div class="stat-value">34%</div>
+          <div class="stat-value">{{ cpu_usage|floatformat:0 }}%</div>
           <div class="stat-label">CPU Usage</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:34%;background:linear-gradient(90deg,#3B82F6,#60a5fa)"></div></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:{{ cpu_usage }}%;background:linear-gradient(90deg,#3B82F6,#60a5fa)"></div></div>
         </div>
         <div class="stat-card" style="--stat-color:#06B6D4;--icon-bg:rgba(6,182,212,0.12);--icon-color:#22d3ee">
           <div class="stat-icon"><i class="fas fa-memory"></i></div>
-          <div class="stat-value">62%</div>
+          <div class="stat-value">{{ ram_usage|floatformat:0 }}%</div>
           <div class="stat-label">RAM Usage</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:62%;background:linear-gradient(90deg,#06B6D4,#38bdf8)"></div></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:{{ ram_usage }}%;background:linear-gradient(90deg,#06B6D4,#38bdf8)"></div></div>
         </div>
         <div class="stat-card" style="--stat-color:#EC4899;--icon-bg:rgba(236,72,153,0.12);--icon-color:#f472b6">
           <div class="stat-icon"><i class="fas fa-hard-drive"></i></div>
-          <div class="stat-value">71%</div>
+          <div class="stat-value">{{ disk_usage|floatformat:0 }}%</div>
           <div class="stat-label">Disk Usage</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:71%;background:linear-gradient(90deg,#EC4899,#f472b6)"></div></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:{{ disk_usage }}%;background:linear-gradient(90deg,#EC4899,#f472b6)"></div></div>
         </div>
         <div class="stat-card" style="--stat-color:#4ade80;--icon-bg:rgba(74,222,128,0.12);--icon-color:#4ade80">
           <div class="stat-icon"><i class="fas fa-clock"></i></div>
@@ -78,16 +78,17 @@
           </div>
           <div class="card-body">
             <div class="service-grid">
-              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Apache</div><div class="service-status">Running</div></div></div>
-              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">MySQL</div><div class="service-status">Running</div></div></div>
-              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Redis</div><div class="service-status">Running</div></div></div>
-              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Postfix</div><div class="service-status">Running</div></div></div>
-              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Dovecot</div><div class="service-status">Running</div></div></div>
-              <div class="service-card"><div class="service-dot dot-yellow"></div><div><div class="service-name">BIND9</div><div class="service-status">Warning</div></div></div>
-              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Pure-FTPd</div><div class="service-status">Running</div></div></div>
-              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Fail2Ban</div><div class="service-status">Active</div></div></div>
-              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Celery</div><div class="service-status">Running</div></div></div>
-              <div class="service-card"><div class="service-dot dot-red"></div><div><div class="service-name">SpamAssassin</div><div class="service-status">Stopped</div></div></div>
+              {% for service in services %}
+              <div class="service-card">
+                <div class="service-dot {% if service.is_running %}dot-green{% else %}dot-red{% endif %}"></div>
+                <div>
+                  <div class="service-name">{{ service.name }}</div>
+                  <div class="service-status">{% if service.is_running %}Running{% else %}Stopped{% endif %}</div>
+                </div>
+              </div>
+              {% empty %}
+              <p>No services monitored.</p>
+              {% endfor %}
             </div>
           </div>
         </div>
@@ -145,16 +146,8 @@
           </div>
           <div class="card-body">
             <table style="font-size:13px">
-              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;width:140px;font-weight:700">Hostname</td><td style="border:none;font-weight:700">srv01.jdpanel.io</td></tr>
-              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">OS</td><td style="border:none;font-weight:700">Ubuntu 22.04 LTS</td></tr>
-              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">Kernel</td><td style="border:none;font-weight:700">6.5.0-25-generic</td></tr>
-              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">CPU</td><td style="border:none;font-weight:700">Intel Xeon E5-2680 × 8</td></tr>
-              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">RAM</td><td style="border:none;font-weight:700">32 GB DDR4</td></tr>
-              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">Storage</td><td style="border:none;font-weight:700">2 TB NVMe SSD</td></tr>
-              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">IP Address</td><td style="border:none;font-weight:700">45.33.32.156</td></tr>
-              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">Uptime</td><td style="border:none;font-weight:700">47 days, 12:34:22</td></tr>
-              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">Django</td><td style="border:none;font-weight:700">5.0.4</td></tr>
-              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">PHP</td><td style="border:none;font-weight:700">8.3.x</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;width:140px;font-weight:700">OS</td><td style="border:none;font-weight:700">{{ os_info }}</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">Uptime</td><td style="border:none;font-weight:700">{{ uptime }}</td></tr>
             </table>
           </div>
         </div>

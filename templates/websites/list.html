@@ -1,0 +1,46 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Websites — JDPanel{% endblock %}
+{% block breadcrumb %}Websites{% endblock %}
+
+{% block content %}
+    <div class="page-view active">
+      <div class="page-header">
+        <div><div class="page-title">Websites</div><div class="page-subtitle">Manage all hosted websites and domains</div></div>
+        <a href="{% url 'websites:create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Website</a>
+      </div>
+      
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Domain</th><th>Owner</th><th>PHP</th><th>Disk Used</th><th>SSL</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            {% for site in websites %}
+            <tr>
+              <td><strong>{{ site.domain }}</strong></td>
+              <td>{{ site.user.username }}</td>
+              <td><span class="badge badge-info">{{ site.php_version }}</span></td>
+              <td>{{ site.disk_used }} MB<div class="mini-bar"><div class="mini-fill" style="width:{% widthratio site.disk_used site.disk_limit 100 %}%;background:#3B82F6"></div></div></td>
+              <td>
+                {% if site.is_ssl_enabled %}
+                <span class="badge badge-success"><i class="fas fa-lock"></i> Active</span>
+                {% else %}
+                <span class="badge badge-warning"><i class="fas fa-lock-open"></i> Inactive</span>
+                {% endif %}
+              </td>
+              <td><span class="badge badge-success">{{ site.status|title }}</span></td>
+              <td style="white-space:nowrap">
+                <button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> 
+                <form action="{% url 'websites:delete' site.pk %}" method="post" style="display:inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i></button>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" style="text-align:center">No websites found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+{% endblock %}

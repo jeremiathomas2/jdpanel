@@ -1,0 +1,46 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Create Database User — JDPanel{% endblock %}
+{% block breadcrumb %}Create Database User{% endblock %}
+
+{% block content %}
+    <div class="page-view active">
+      <div class="page-header">
+        <div><div class="page-title">Create Database User</div><div class="page-subtitle">Add a new user and assign database permissions</div></div>
+      </div>
+      
+      <div class="card" style="max-width: 600px;">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 700;">Username</label>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-weight: 700;">{{ request.user.username }}_</span>
+                        {{ form.username }}
+                    </div>
+                    {% if form.username.errors %}
+                        <div style="color: red; font-size: 12px; margin-top: 4px;">{{ form.username.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 700;">Password</label>
+                    {{ form.password }}
+                </div>
+
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 700;">Assign Databases</label>
+                    {{ form.databases }}
+                    <small style="color: var(--text-muted);">Hold Ctrl to select multiple databases.</small>
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-top: 24px;">
+                    <button type="submit" class="btn btn-primary">Create User</button>
+                    <a href="{% url 'databases:list' %}" class="btn btn-outline">Cancel</a>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+{% endblock %}

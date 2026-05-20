@@ -1,34 +1,61 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from apps.dashboard.models import Website, Database, EmailAccount
+from apps.accounts.models import UserProfile
+from apps.websites.models import Website
+from apps.databases.models import Database
+from apps.mail.models import EmailAccount
+from apps.monitoring.models import ServiceStatus
+from apps.packages.models import HostingPackage
 
 class Command(BaseCommand):
     help = 'Setup initial admin account and sample data'
 
     def handle(self, *args, **options):
+        # Create Package
+        package, _ = HostingPackage.objects.get_or_create(
+            name='Premium Plan',
+            disk_space=51200,
+            bandwidth=102400,
+            max_websites=10,
+            max_databases=10,
+            max_emails=50
+        )
+
         # Create Admin
-        username = 'admin@jpanel.cloud'
-        password = 'admin@123'
-        if not User.objects.filter(username=username).exists():
-            User.objects.create_superuser(username=username, email=username, password=password)
+        username = 'admin'
+        password = 'admin123'
+        user, created = User.objects.get_or_create(username=username, defaults={'email': 'admin@jdpanel.io'})
+        user.set_password(password)
+        user.is_superuser = True
+        user.is_staff = True
+        user.save()
+        if created:
             self.stdout.write(self.style.SUCCESS(f'Successfully created admin: {username}'))
         else:
-            self.stdout.write(self.style.WARNING(f'Admin {username} already exists'))
+            self.stdout.write(self.style.SUCCESS(f'Successfully updated admin: {username}'))
+        
+        profile, _ = UserProfile.objects.get_or_create(user=user, defaults={'role': 'admin', 'package': package})
 
         # Create Sample Websites
         if not Website.objects.exists():
-            Website.objects.create(domain='example.com', owner='admin', php_version='8.3', disk_used='1.2 GB', disk_percent=40, ssl_status='active', status='active')
-            Website.objects.create(domain='test.cloud', owner='admin', php_version='8.2', disk_used='500 MB', disk_percent=15, ssl_status='active', status='active')
+            Website.objects.create(domain='example.com', user=user, php_version='8.3', disk_used=1200, disk_limit=5000)
+            Website.objects.create(domain='test.cloud', user=user, php_version='8.2', disk_used=500, disk_limit=5000)
             self.stdout.write(self.style.SUCCESS('Successfully created sample websites'))
 
         # Create Sample Databases
         if not Database.objects.exists():
-            Database.objects.create(name='wp_main', owner='admin', size='250 MB', tables_count=45, charset='utf8mb4')
-            Database.objects.create(name='app_db', owner='admin', size='1.2 GB', tables_count=120, charset='utf8mb4')
+            Database.objects.create(name='wp_main', user=user, db_type='mysql')
+            Database.objects.create(name='app_db', user=user, db_type='mariadb')
             self.stdout.write(self.style.SUCCESS('Successfully created sample databases'))
 
         # Create Sample Emails
         if not EmailAccount.objects.exists():
-            EmailAccount.objects.create(email='info@example.com', domain='example.com', quota='2 GB', used='450 MB', used_percent=22, dkim_status='Active', status='Active')
-            EmailAccount.objects.create(email='admin@test.cloud', domain='test.cloud', quota='5 GB', used='1.1 GB', used_percent=20, dkim_status='Active', status='Active')
+            site = Website.objects.first()
+            EmailAccount.objects.create(email='info@example.com', website=site, user=user, quota=2048, quota_used=450)
             self.stdout.write(self.style.SUCCESS('Successfully created sample emails'))
+
+        # Create Services
+        services = ['Apache', 'MySQL', 'Redis', 'Postfix', 'Dovecot', 'BIND9', 'Pure-FTPd', 'Fail2Ban', 'Celery']
+        for s in services:
+            ServiceStatus.objects.get_or_create(name=s, defaults={'is_running': True})
+        self.stdout.write(self.style.SUCCESS('Successfully created sample services'))

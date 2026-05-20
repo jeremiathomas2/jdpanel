@@ -1,0 +1,64 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Emails — JDPanel{% endblock %}
+{% block breadcrumb %}Emails{% endblock %}
+
+{% block content %}
+    <div class="page-view active">
+      <div class="page-header">
+        <div><div class="page-title">Email Hosting</div><div class="page-subtitle">Manage your email accounts and forwarders</div></div>
+        <a href="{% url 'mail:create' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Create Email Account</a>
+      </div>
+      
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card-header"><div class="card-title">Email Accounts</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Email Address</th><th>Website</th><th>Quota Used</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              {% for account in accounts %}
+              <tr>
+                <td><strong>{{ account.email }}</strong></td>
+                <td>{{ account.website.domain }}</td>
+                <td>
+                    {{ account.quota_used }} MB / {{ account.quota }} MB
+                    <div class="mini-bar"><div class="mini-fill" style="width:{% widthratio account.quota_used account.quota 100 %}%;background:#3B82F6"></div></div>
+                </td>
+                <td><span class="badge {% if account.is_active %}badge-success{% else %}badge-danger{% endif %}">{% if account.is_active %}Active{% else %}Inactive{% endif %}</span></td>
+                <td style="white-space:nowrap">
+                  <button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> 
+                  <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="5" style="text-align:center">No email accounts found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Email Forwarders</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Source</th><th>Destination</th><th>Website</th><th>Actions</th></tr></thead>
+            <tbody>
+              {% for forwarder in forwarders %}
+              <tr>
+                <td><strong>{{ forwarder.source }}</strong></td>
+                <td>{{ forwarder.destination }}</td>
+                <td>{{ forwarder.website.domain }}</td>
+                <td style="white-space:nowrap">
+                  <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="4" style="text-align:center">No email forwarders found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+{% endblock %}

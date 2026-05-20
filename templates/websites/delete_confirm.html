@@ -1,0 +1,31 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Delete Website — JDPanel{% endblock %}
+{% block breadcrumb %}Delete Website{% endblock %}
+
+{% block content %}
+    <div class="page-view active">
+      <div class="page-header">
+        <div><div class="page-title">Delete Website</div><div class="page-subtitle">Are you sure you want to delete this website?</div></div>
+      </div>
+      
+      <div class="card" style="max-width: 600px; border-color: var(--badge-danger);">
+        <div class="card-body">
+            <p style="margin-bottom: 24px;">
+                You are about to delete <strong>{{ website.domain }}</strong>. 
+                This action will remove all configuration files and directory structures associated with this website.
+                <br><br>
+                <span style="color: var(--badge-danger-text); font-weight: 700;">This action cannot be undone!</span>
+            </p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div style="display: flex; gap: 8px;">
+                    <button type="submit" class="btn btn-danger">Yes, Delete Everything</button>
+                    <a href="{% url 'websites:list' %}" class="btn btn-outline">Cancel and Go Back</a>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+{% endblock %}

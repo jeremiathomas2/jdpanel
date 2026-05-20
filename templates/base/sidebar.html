@@ -18,7 +18,7 @@
     </div>
 
     <div class="nav-item">
-      <a href="{% url 'dashboard:websites' %}" class="nav-link {% if request.resolver_match.url_name == 'websites' %}active{% endif %}">
+      <a href="{% url 'websites:list' %}" class="nav-link {% if request.resolver_match.app_name == 'websites' %}active{% endif %}">
         <div class="nav-icon"><i class="fas fa-globe"></i></div>
         <span class="nav-label">Websites</span>
         <div class="nav-tooltip">Websites</div>
@@ -26,7 +26,7 @@
     </div>
 
     <div class="nav-item">
-      <a href="{% url 'dashboard:databases' %}" class="nav-link {% if request.resolver_match.url_name == 'databases' %}active{% endif %}">
+      <a href="{% url 'databases:list' %}" class="nav-link {% if request.resolver_match.app_name == 'databases' %}active{% endif %}">
         <div class="nav-icon"><i class="fas fa-database"></i></div>
         <span class="nav-label">Databases</span>
         <div class="nav-tooltip">Databases</div>
@@ -34,7 +34,7 @@
     </div>
 
     <div class="nav-item">
-      <a href="{% url 'dashboard:emails' %}" class="nav-link {% if request.resolver_match.url_name == 'emails' %}active{% endif %}">
+      <a href="{% url 'mail:list' %}" class="nav-link {% if request.resolver_match.app_name == 'mail' %}active{% endif %}">
         <div class="nav-icon"><i class="fas fa-envelope"></i></div>
         <span class="nav-label">Emails</span>
         <div class="nav-tooltip">Emails</div>
@@ -52,12 +52,12 @@
         <div class="nav-tooltip">Email</div>
       </div>
       <div class="nav-submenu">
-        <div class="sub-link" onclick="navigate('email',this)"><div class="sub-dot"></div>Email Accounts</div>
+        <a href="{% url 'mail:list' %}" class="sub-link {% if request.resolver_match.url_name == 'list' and request.resolver_match.app_name == 'mail' %}active{% endif %}"><div class="sub-dot"></div>Email Accounts</a>
         <div class="sub-link" onclick="navigate('webmail',this)"><div class="sub-dot"></div>Webmail</div>
-        <div class="sub-link" onclick="navigate('forwarders',this)"><div class="sub-dot"></div>Forwarders</div>
-        <div class="sub-link" onclick="navigate('autoresponders',this)"><div class="sub-dot"></div>Auto Responders</div>
-        <div class="sub-link" onclick="navigate('spam',this)"><div class="sub-dot"></div>Spam Filters</div>
-        <div class="sub-link" onclick="navigate('dkim',this)"><div class="sub-dot"></div>DKIM / SPF</div>
+        <a href="{% url 'mail:list' %}" class="sub-link"><div class="sub-dot"></div>Forwarders</a>
+        <a href="{% url 'mail:auto_responders' %}" class="sub-link {% if request.resolver_match.url_name == 'auto_responders' %}active{% endif %}"><div class="sub-dot"></div>Auto Responders</a>
+        <a href="{% url 'mail:spam_filters' %}" class="sub-link {% if request.resolver_match.url_name == 'spam_filters' %}active{% endif %}"><div class="sub-dot"></div>Spam Filters</a>
+        <a href="{% url 'mail:dkim_spf' %}" class="sub-link {% if request.resolver_match.url_name == 'dkim_spf' %}active{% endif %}"><div class="sub-dot"></div>DKIM / SPF</a>
       </div>
     </div>
 
@@ -69,9 +69,9 @@
         <div class="nav-tooltip">DNS</div>
       </div>
       <div class="nav-submenu">
-        <div class="sub-link" onclick="navigate('dns',this)"><div class="sub-dot"></div>DNS Zones</div>
-        <div class="sub-link" onclick="navigate('dns-records',this)"><div class="sub-dot"></div>DNS Records</div>
-        <div class="sub-link" onclick="navigate('dns-propagation',this)"><div class="sub-dot"></div>Propagation Check</div>
+        <a href="{% url 'dns:zone_list' %}" class="sub-link {% if request.resolver_match.url_name == 'zone_list' %}active{% endif %}"><div class="sub-dot"></div>DNS Zones</a>
+        <a href="{% url 'dns:zone_list' %}" class="sub-link"><div class="sub-dot"></div>DNS Records</a>
+        <a href="{% url 'dns:propagation_check' %}" class="sub-link {% if request.resolver_match.url_name == 'propagation_check' %}active{% endif %}"><div class="sub-dot"></div>Propagation Check</a>
       </div>
     </div>
 
@@ -83,9 +83,9 @@
         <div class="nav-tooltip">SSL</div>
       </div>
       <div class="nav-submenu">
-        <div class="sub-link" onclick="navigate('ssl',this)"><div class="sub-dot"></div>SSL Certificates</div>
-        <div class="sub-link" onclick="navigate('ssl-install',this)"><div class="sub-dot"></div>Auto Install SSL</div>
-        <div class="sub-link" onclick="navigate('ssl-custom',this)"><div class="sub-dot"></div>Custom SSL Upload</div>
+        <a href="{% url 'ssl:list' %}" class="sub-link {% if request.resolver_match.url_name == 'list' and request.resolver_match.app_name == 'ssl' %}active{% endif %}"><div class="sub-dot"></div>SSL Certificates</a>
+        <a href="{% url 'ssl:auto_install' %}" class="sub-link {% if request.resolver_match.url_name == 'auto_install' %}active{% endif %}"><div class="sub-dot"></div>Auto Install SSL</a>
+        <a href="{% url 'ssl:custom_upload' %}" class="sub-link {% if request.resolver_match.url_name == 'custom_upload' %}active{% endif %}"><div class="sub-dot"></div>Custom SSL Upload</a>
       </div>
     </div>
 
@@ -97,8 +97,8 @@
         <div class="nav-tooltip">FTP</div>
       </div>
       <div class="nav-submenu">
-        <div class="sub-link" onclick="navigate('ftp',this)"><div class="sub-dot"></div>FTP Accounts</div>
-        <div class="sub-link" onclick="navigate('ftp-logs',this)"><div class="sub-dot"></div>FTP Logs</div>
+        <a href="{% url 'ftp:list' %}" class="sub-link {% if request.resolver_match.url_name == 'list' and request.resolver_match.app_name == 'ftp' %}active{% endif %}"><div class="sub-dot"></div>FTP Accounts</a>
+        <a href="{% url 'ftp:logs' %}" class="sub-link {% if request.resolver_match.url_name == 'logs' %}active{% endif %}"><div class="sub-dot"></div>FTP Logs</a>
       </div>
     </div>
 
@@ -113,11 +113,11 @@
         <div class="nav-tooltip">Security</div>
       </div>
       <div class="nav-submenu">
-        <div class="sub-link" onclick="navigate('security',this)"><div class="sub-dot"></div>Firewall Manager</div>
-        <div class="sub-link" onclick="navigate('fail2ban',this)"><div class="sub-dot"></div>Fail2Ban</div>
-        <div class="sub-link" onclick="navigate('malware',this)"><div class="sub-dot"></div>Malware Scanner</div>
-        <div class="sub-link" onclick="navigate('ip-block',this)"><div class="sub-dot"></div>IP Blocking</div>
-        <div class="sub-link" onclick="navigate('modsecurity',this)"><div class="sub-dot"></div>ModSecurity</div>
+        <a href="{% url 'security:firewall' %}" class="sub-link {% if request.resolver_match.url_name == 'firewall' %}active{% endif %}"><div class="sub-dot"></div>Firewall Manager</a>
+        <a href="{% url 'security:fail2ban' %}" class="sub-link {% if request.resolver_match.url_name == 'fail2ban' %}active{% endif %}"><div class="sub-dot"></div>Fail2Ban</a>
+        <a href="{% url 'security:malware' %}" class="sub-link {% if request.resolver_match.url_name == 'malware' %}active{% endif %}"><div class="sub-dot"></div>Malware Scanner</a>
+        <a href="{% url 'security:ip_blocking' %}" class="sub-link {% if request.resolver_match.url_name == 'ip_blocking' %}active{% endif %}"><div class="sub-dot"></div>IP Blocking</a>
+        <a href="{% url 'security:modsecurity' %}" class="sub-link {% if request.resolver_match.url_name == 'modsecurity' %}active{% endif %}"><div class="sub-dot"></div>ModSecurity</a>
       </div>
     </div>
 
@@ -129,10 +129,10 @@
         <div class="nav-tooltip">Backups</div>
       </div>
       <div class="nav-submenu">
-        <div class="sub-link" onclick="navigate('backups',this)"><div class="sub-dot"></div>Backup Manager</div>
-        <div class="sub-link" onclick="navigate('backup-schedule',this)"><div class="sub-dot"></div>Schedules</div>
-        <div class="sub-link" onclick="navigate('backup-restore',this)"><div class="sub-dot"></div>Restore</div>
-        <div class="sub-link" onclick="navigate('backup-remote',this)"><div class="sub-dot"></div>Remote Storage</div>
+        <a href="{% url 'backups:manager' %}" class="sub-link {% if request.resolver_match.url_name == 'manager' %}active{% endif %}"><div class="sub-dot"></div>Backup Manager</a>
+        <a href="{% url 'backups:schedules' %}" class="sub-link {% if request.resolver_match.url_name == 'schedules' %}active{% endif %}"><div class="sub-dot"></div>Schedules</a>
+        <a href="{% url 'backups:restore' %}" class="sub-link {% if request.resolver_match.url_name == 'restore' %}active{% endif %}"><div class="sub-dot"></div>Restore</a>
+        <a href="{% url 'backups:remote_storage' %}" class="sub-link {% if request.resolver_match.url_name == 'remote_storage' %}active{% endif %}"><div class="sub-dot"></div>Remote Storage</a>
       </div>
     </div>
 
@@ -144,9 +144,9 @@
         <div class="nav-tooltip">Packages</div>
       </div>
       <div class="nav-submenu">
-        <div class="sub-link" onclick="navigate('packages',this)"><div class="sub-dot"></div>All Packages</div>
-        <div class="sub-link" onclick="navigate('resellers',this)"><div class="sub-dot"></div>Reseller Accounts</div>
-        <div class="sub-link" onclick="navigate('users',this)"><div class="sub-dot"></div>Hosting Users</div>
+        <a href="{% url 'packages:list' %}" class="sub-link {% if request.resolver_match.url_name == 'list' and request.resolver_match.app_name == 'packages' %}active{% endif %}"><div class="sub-dot"></div>All Packages</a>
+        <a href="{% url 'accounts:reseller_list' %}" class="sub-link {% if request.resolver_match.url_name == 'reseller_list' %}active{% endif %}"><div class="sub-dot"></div>Reseller Accounts</a>
+        <a href="{% url 'accounts:user_list' %}" class="sub-link {% if request.resolver_match.url_name == 'user_list' %}active{% endif %}"><div class="sub-dot"></div>Hosting Users</a>
       </div>
     </div>
 
@@ -158,9 +158,9 @@
         <div class="nav-tooltip">Billing</div>
       </div>
       <div class="nav-submenu">
-        <div class="sub-link" onclick="navigate('billing',this)"><div class="sub-dot"></div>Invoices</div>
-        <div class="sub-link" onclick="navigate('subscriptions',this)"><div class="sub-dot"></div>Subscriptions</div>
-        <div class="sub-link" onclick="navigate('payments',this)"><div class="sub-dot"></div>Payment Gateway</div>
+        <a href="{% url 'billing:invoice_list' %}" class="sub-link {% if request.resolver_match.url_name == 'invoice_list' %}active{% endif %}"><div class="sub-dot"></div>Invoices</a>
+        <a href="{% url 'billing:subscription_list' %}" class="sub-link {% if request.resolver_match.url_name == 'subscription_list' %}active{% endif %}"><div class="sub-dot"></div>Subscriptions</a>
+        <a href="{% url 'billing:payment_gateway' %}" class="sub-link {% if request.resolver_match.url_name == 'payment_gateway' %}active{% endif %}"><div class="sub-dot"></div>Payment Gateway</a>
       </div>
     </div>
 

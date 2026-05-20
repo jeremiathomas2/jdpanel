@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Firewall Manager — JDPanel{% endblock %}
+{% block breadcrumb %}Security / Firewall{% endblock %}
+
+{% block content %}
+<div class="page-view active">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Firewall Manager</div>
+      <div class="page-subtitle">Configure server firewall rules (UFW/iptables)</div>
+    </div>
+    <button class="btn btn-primary"><i class="fas fa-plus"></i> Add Rule</button>
+  </div>
+  
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Port</th>
+          <th>Protocol</th>
+          <th>Action</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rule in rules %}
+        <tr>
+          <td><strong>{{ rule.name }}</strong></td>
+          <td>{{ rule.port }}</td>
+          <td>{{ rule.protocol }}</td>
+          <td>
+            <span class="badge {% if rule.action == 'ALLOW' %}badge-success{% else %}badge-danger{% endif %}">
+              {{ rule.action }}
+            </span>
+          </td>
+          <td>
+            <span class="badge {% if rule.is_active %}badge-success{% else %}badge-outline{% endif %}">
+              {% if rule.is_active %}Enabled{% else %}Disabled{% endif %}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-outline btn-sm"><i class="fas fa-toggle-on"></i></button>
+            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" style="text-align:center">No firewall rules defined.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
