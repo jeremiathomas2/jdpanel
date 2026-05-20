@@ -47,10 +47,10 @@
     <div class="profile-dropdown" id="profileDropdown">
       <div class="profile-menu-item"><i class="fas fa-user" style="width:16px"></i> My Profile</div>
       <div class="profile-menu-item" onclick="openSettings()"><i class="fas fa-palette" style="width:16px"></i> Appearance</div>
-      <div class="profile-menu-item"><i class="fas fa-key" style="width:16px"></i> Change Password</div>
-      <div class="profile-menu-item"><i class="fas fa-shield" style="width:16px"></i> 2FA Security</div>
+      <a href="{% url 'accounts:password_change' %}" class="profile-menu-item"><i class="fas fa-key" style="width:16px"></i> Change Password</a>
+      <a href="{% url 'accounts:security_2fa' %}" class="profile-menu-item"><i class="fas fa-shield" style="width:16px"></i> 2FA Security</a>
       <div class="profile-menu-sep"></div>
-      <div class="profile-menu-item danger"><i class="fas fa-arrow-right-from-bracket" style="width:16px"></i> Sign Out</div>
+      <a href="{% url 'accounts:logout' %}" class="profile-menu-item danger"><i class="fas fa-arrow-right-from-bracket" style="width:16px"></i> Sign Out</a>
     </div>
   </div>
 </header>

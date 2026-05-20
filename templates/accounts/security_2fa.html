@@ -1,0 +1,45 @@
+{% extends 'base/base.html' %}
+
+{% block title %}2FA Security — JDPanel{% endblock %}
+{% block breadcrumb %}2FA Security{% endblock %}
+
+{% block content %}
+<div class="page-view active">
+    <div class="page-header">
+        <div>
+            <div class="page-title">Two-Factor Authentication</div>
+            <div class="page-subtitle">Add an extra layer of security to your account</div>
+        </div>
+    </div>
+
+    <div class="card" style="max-width: 600px; margin: 0 auto;">
+        <div class="card-header">
+            <div class="card-title"><i class="fas fa-shield-halved" style="color:var(--accent);margin-right:8px"></i> 2FA Setup</div>
+        </div>
+        <div class="card-body" style="text-align: center; padding: 40px 20px;">
+            <div style="font-size: 48px; color: var(--accent); margin-bottom: 24px;">
+                <i class="fas fa-mobile-screen-button"></i>
+            </div>
+            <h3 style="color: var(--text-primary); margin-bottom: 12px; font-weight: 800;">Secure Your Account</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 30px; line-height: 1.6;">
+                Two-factor authentication (2FA) adds an extra layer of security to your JDPanel account. 
+                Once enabled, you'll need to provide a unique code from an authenticator app (like Google Authenticator or Authy) in addition to your password.
+            </p>
+
+            <div class="alert alert-info" style="text-align: left; margin-bottom: 30px;">
+                <i class="fas fa-circle-info" style="margin-right: 10px;"></i>
+                2FA module is currently being finalized. You will be able to scan a QR code here soon to enable this feature.
+            </div>
+
+            <button class="btn btn-primary" disabled style="opacity: 0.6; cursor: not-allowed;">
+                <i class="fas fa-qrcode" style="margin-right: 8px;"></i> Configure 2FA (Coming Soon)
+            </button>
+            <div style="margin-top: 20px;">
+                <a href="{% url 'dashboard:index' %}" style="color: var(--accent); text-decoration: none; font-size: 13px; font-weight: 700;">
+                    <i class="fas fa-arrow-left" style="margin-right: 4px;"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
