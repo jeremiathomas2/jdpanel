@@ -105,8 +105,59 @@ function closeSettings() {
   if (overlay) overlay.classList.remove('show');
 }
 
+// ─── THEME PERSISTENCE ───
+const SETTINGS_KEY = 'jdpanel_settings';
+let settings = JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {
+  theme: 'dark',
+  accent: '#3B82F6',
+  accentHover: '#2563EB',
+  sidebarBg: '#0f172a',
+  headerBg: '#0f172a',
+  footerBg: '#0f172a',
+  sidebarWidth: '260',
+  animSpeed: 'normal',
+  compactSidebar: false,
+  showFooter: true
+};
+
+function saveSettings() {
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+}
+
+function applySettings() {
+  setTheme(settings.theme, false);
+  setAccent(settings.accent, settings.accentHover, null, false);
+  setSidebarBg(settings.sidebarBg, null, false);
+  setHeaderBg(settings.headerBg, null, false);
+  setFooterBg(settings.footerBg, null, false);
+  setSidebarWidth(settings.sidebarWidth, false);
+  setAnimSpeed(settings.animSpeed, null, false);
+  
+  if (settings.compactSidebar) {
+    const sidebar = document.getElementById('sidebar');
+    const wrapper = document.getElementById('main-wrapper');
+    const toggle = document.getElementById('toggleCompact');
+    if (sidebar) sidebar.classList.add('collapsed');
+    if (wrapper) wrapper.classList.add('collapsed');
+    if (toggle) toggle.classList.add('on');
+    sidebarCollapsed = true;
+  }
+  
+  const footer = document.getElementById('footer');
+  const toggleFooter = document.getElementById('toggleFooter');
+  if (footer) footer.style.display = settings.showFooter ? '' : 'none';
+  if (toggleFooter) {
+    if (settings.showFooter) toggleFooter.classList.add('on');
+    else toggleFooter.classList.remove('on');
+  }
+}
+
 // ─── THEME ───
-function setTheme(theme) {
+function setTheme(theme, save = true) {
+  if (save) {
+    settings.theme = theme;
+    saveSettings();
+  }
   document.querySelectorAll('.theme-opt').forEach(o => o.classList.remove('active'));
   if(theme === 'light') {
     document.documentElement.setAttribute('data-theme','light');
@@ -118,18 +169,29 @@ function setTheme(theme) {
     if (opt) opt.classList.add('active');
   } else {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', (save ? (prefersDark ? 'dark' : 'light') : theme));
     const opt = document.getElementById('themeAuto');
     if (opt) opt.classList.add('active');
   }
 }
 
 // ─── ACCENT COLOR ───
-function setAccent(color, hover, el) {
+function setAccent(color, hover, el, save = true) {
+  if (save) {
+    settings.accent = color;
+    settings.accentHover = hover;
+    saveSettings();
+  }
   document.documentElement.style.setProperty('--accent', color);
   document.documentElement.style.setProperty('--accent-hover', hover);
   document.documentElement.style.setProperty('--accent-light', hexToRgba(color, 0.12));
   document.querySelectorAll('#accentSwatches .swatch').forEach(s => s.classList.remove('active'));
+  
+  // Find and activate swatch if color matches
+  if (!el) {
+    el = document.querySelector(`#accentSwatches .swatch[data-color="${color}"]`);
+  }
+  
   if(el) el.classList.add('active');
   const custom = document.getElementById('accentCustom');
   const hex = document.getElementById('accentHex');
@@ -137,26 +199,27 @@ function setAccent(color, hover, el) {
   if (hex) hex.value = color;
 }
 function setAccentCustom(val) {
-  document.documentElement.style.setProperty('--accent', val);
-  document.documentElement.style.setProperty('--accent-light', hexToRgba(val, 0.12));
-  const hex = document.getElementById('accentHex');
-  if (hex) hex.value = val;
-  document.querySelectorAll('#accentSwatches .swatch').forEach(s => s.classList.remove('active'));
+  setAccent(val, val, null, true);
 }
 function setAccentHexInput(val) {
   if(/^#[0-9A-Fa-f]{6}$/.test(val)) {
-    document.documentElement.style.setProperty('--accent', val);
-    document.documentElement.style.setProperty('--accent-light', hexToRgba(val, 0.12));
-    const custom = document.getElementById('accentCustom');
-    if (custom) custom.value = val;
+    setAccent(val, val, null, true);
   }
 }
 
 // ─── SIDEBAR BG ───
-function setSidebarBg(color, el) {
+function setSidebarBg(color, el, save = true) {
+  if (save) {
+    settings.sidebarBg = color;
+    saveSettings();
+  }
   document.documentElement.style.setProperty('--sidebar-bg', color);
-  document.documentElement.style.setProperty('--header-bg', color);
   document.querySelectorAll('#sidebarSwatches .swatch').forEach(s => s.classList.remove('active'));
+  
+  if (!el) {
+    el = document.querySelector(`#sidebarSwatches .swatch[data-color="${color}"]`);
+  }
+
   if(el) el.classList.add('active');
   const custom = document.getElementById('sidebarCustom');
   const hex = document.getElementById('sidebarHex');
@@ -164,47 +227,75 @@ function setSidebarBg(color, el) {
   if (hex) hex.value = color;
 }
 function setSidebarBgCustom(val) {
-  document.documentElement.style.setProperty('--sidebar-bg', val);
-  const hex = document.getElementById('sidebarHex');
-  if (hex) hex.value = val;
-  document.querySelectorAll('#sidebarSwatches .swatch').forEach(s => s.classList.remove('active'));
+  setSidebarBg(val, null, true);
 }
 
 // ─── HEADER BG ───
-function setHeaderBg(color, el) {
+function setHeaderBg(color, el, save = true) {
+  if (save) {
+    settings.headerBg = color;
+    saveSettings();
+  }
   document.documentElement.style.setProperty('--header-bg', color);
   document.querySelectorAll('#headerSwatches .swatch').forEach(s => s.classList.remove('active'));
+  
+  if (!el) {
+    el = document.querySelector(`#headerSwatches .swatch[data-color="${color}"]`);
+  }
+
   if(el) el.classList.add('active');
   const custom = document.getElementById('headerCustom');
   if (custom) custom.value = color;
 }
 function setHeaderBgCustom(val) {
-  document.documentElement.style.setProperty('--header-bg', val);
-  document.querySelectorAll('#headerSwatches .swatch').forEach(s => s.classList.remove('active'));
+  setHeaderBg(val, null, true);
 }
 
 // ─── FOOTER BG ───
-function setFooterBg(color, el) {
+function setFooterBg(color, el, save = true) {
+  if (save) {
+    settings.footerBg = color;
+    saveSettings();
+  }
   document.documentElement.style.setProperty('--footer-bg', color);
   document.querySelectorAll('#footerSwatches .swatch').forEach(s => s.classList.remove('active'));
+  
+  if (!el) {
+    el = document.querySelector(`#footerSwatches .swatch[data-color="${color}"]`);
+  }
+
   if(el) el.classList.add('active');
   const custom = document.getElementById('footerCustom');
   if (custom) custom.value = color;
 }
 function setFooterBgCustom(val) {
-  document.documentElement.style.setProperty('--footer-bg', val);
-  document.querySelectorAll('#footerSwatches .swatch').forEach(s => s.classList.remove('active'));
+  setFooterBg(val, null, true);
 }
 
 // ─── SIDEBAR WIDTH ───
-function setSidebarWidth(val) {
+function setSidebarWidth(val, save = true) {
+  if (save) {
+    settings.sidebarWidth = val;
+    saveSettings();
+  }
   document.documentElement.style.setProperty('--sidebar-width', val + 'px');
+  const valDisplay = document.getElementById('sidebarWidthVal');
+  if (valDisplay) valDisplay.textContent = val + 'px';
+  const slider = document.querySelector('input[type=range][oninput*="setSidebarWidth"]');
+  if (slider) slider.value = val;
 }
 
 // ─── ANIMATION SPEED ───
-function setAnimSpeed(speed, el) {
-  document.querySelectorAll('.settings-section .theme-opt').forEach(o => { if(o.textContent.match(/Fast|Normal|Slow|None/)) o.classList.remove('active'); });
-  if(el) el.classList.add('active');
+function setAnimSpeed(speed, el, save = true) {
+  if (save) {
+    settings.animSpeed = speed;
+    saveSettings();
+  }
+  document.querySelectorAll('.settings-section .theme-opt').forEach(o => { 
+    if(o.textContent.toLowerCase().includes(speed)) o.classList.add('active');
+    else if (o.textContent.match(/Fast|Normal|Slow|None/)) o.classList.remove('active');
+  });
+  
   document.body.classList.remove('anim-fast','anim-slow','anim-none');
   if(speed === 'fast') document.body.classList.add('anim-fast');
   else if(speed === 'slow') document.body.classList.add('anim-slow');
@@ -219,33 +310,26 @@ function toggleCompactSidebar(el) {
   sidebarCollapsed = el.classList.contains('on');
   sidebar.classList.toggle('collapsed', sidebarCollapsed);
   wrapper.classList.toggle('collapsed', sidebarCollapsed);
+  
+  settings.compactSidebar = sidebarCollapsed;
+  saveSettings();
 }
 
 // ─── FOOTER VISIBILITY ───
 function toggleFooterVis(el) {
   el.classList.toggle('on');
   const footer = document.getElementById('footer');
-  if (footer) footer.style.display = el.classList.contains('on') ? '' : 'none';
+  const isVisible = el.classList.contains('on');
+  if (footer) footer.style.display = isVisible ? '' : 'none';
+  
+  settings.showFooter = isVisible;
+  saveSettings();
 }
 
 // ─── RESET ───
 function resetSettings() {
-  document.documentElement.removeAttribute('style');
-  setTheme('dark');
-  const accCustom = document.getElementById('accentCustom');
-  const accHex = document.getElementById('accentHex');
-  const sideCustom = document.getElementById('sidebarCustom');
-  const sideHex = document.getElementById('sidebarHex');
-  const headCustom = document.getElementById('headerCustom');
-  const footCustom = document.getElementById('footerCustom');
-  
-  if (accCustom) accCustom.value = '#3B82F6';
-  if (accHex) accHex.value = '#3B82F6';
-  if (sideCustom) sideCustom.value = '#0f172a';
-  if (sideHex) sideHex.value = '#0f172a';
-  if (headCustom) headCustom.value = '#0f172a';
-  if (footCustom) footCustom.value = '#0f172a';
-  document.body.classList.remove('anim-fast','anim-slow','anim-none');
+  localStorage.removeItem(SETTINGS_KEY);
+  location.reload();
 }
 
 // ─── DROPDOWNS ───
@@ -281,9 +365,20 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
+function rgbToHex(rgb) {
+  if (!rgb) return '';
+  if (rgb.startsWith('#')) return rgb.toLowerCase();
+  const res = rgb.match(/\d+/g);
+  if (!res || res.length < 3) return '';
+  return "#" + ((1 << 24) + (parseInt(res[0]) << 16) + (parseInt(res[1]) << 8) + parseInt(res[2])).toString(16).slice(1).toLowerCase();
+}
+
 // Auto-open first submenu (server)
 const serverNav = document.getElementById('nav-server');
 if (serverNav) serverNav.classList.add('open');
+
+// Apply saved settings
+applySettings();
 
 // Animate progress bars on load
 window.addEventListener('load', () => {
