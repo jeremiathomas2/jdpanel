@@ -1,0 +1,164 @@
+<!-- ─── SETTINGS PANEL ─── -->
+<div id="settings-panel">
+  <div class="settings-header">
+    <div class="settings-title"><i class="fas fa-palette" style="color:var(--accent);margin-right:8px"></i>Appearance Settings</div>
+    <button class="settings-close" onclick="closeSettings()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="settings-body">
+
+    <!-- Theme -->
+    <div class="settings-section">
+      <div class="settings-section-title">Color Mode</div>
+      <div class="theme-options">
+        <div class="theme-opt" id="themeLight" onclick="setTheme('light')">
+          <i class="fas fa-sun"></i>Light
+        </div>
+        <div class="theme-opt active" id="themeDark" onclick="setTheme('dark')">
+          <i class="fas fa-moon"></i>Dark
+        </div>
+        <div class="theme-opt" id="themeAuto" onclick="setTheme('auto')">
+          <i class="fas fa-circle-half-stroke"></i>Auto
+        </div>
+      </div>
+    </div>
+
+    <!-- Accent Color -->
+    <div class="settings-section">
+      <div class="settings-section-title">Accent Color</div>
+      <div class="color-section">
+        <span class="color-label">Select accent</span>
+        <div class="color-swatches" id="accentSwatches">
+          <div class="swatch active" style="background:#3B82F6" data-color="#3B82F6" onclick="setAccent('#3B82F6','#2563EB',this)"></div>
+          <div class="swatch" style="background:#8B5CF6" data-color="#8B5CF6" onclick="setAccent('#8B5CF6','#7C3AED',this)"></div>
+          <div class="swatch" style="background:#EC4899" data-color="#EC4899" onclick="setAccent('#EC4899','#db2777',this)"></div>
+          <div class="swatch" style="background:#10B981" data-color="#10B981" onclick="setAccent('#10B981','#059669',this)"></div>
+          <div class="swatch" style="background:#F59E0B" data-color="#F59E0B" onclick="setAccent('#F59E0B','#D97706',this)"></div>
+          <div class="swatch" style="background:#EF4444" data-color="#EF4444" onclick="setAccent('#EF4444','#DC2626',this)"></div>
+          <div class="swatch" style="background:#06B6D4" data-color="#06B6D4" onclick="setAccent('#06B6D4','#0891B2',this)"></div>
+          <div class="swatch" style="background:#F97316" data-color="#F97316" onclick="setAccent('#F97316','#EA580C',this)"></div>
+        </div>
+        <div class="color-input-row">
+          <input type="color" id="accentCustom" value="#3B82F6" oninput="setAccentCustom(this.value)">
+          <input type="text" class="form-control" id="accentHex" value="#3B82F6" placeholder="#3B82F6" oninput="setAccentHexInput(this.value)">
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Color -->
+    <div class="settings-section">
+      <div class="settings-section-title">Sidebar Color</div>
+      <div class="color-section">
+        <span class="color-label">Background</span>
+        <div class="color-swatches" id="sidebarSwatches">
+          <div class="swatch active" style="background:#0f172a" onclick="setSidebarBg('#0f172a',this)"></div>
+          <div class="swatch" style="background:#1e1b4b" onclick="setSidebarBg('#1e1b4b',this)"></div>
+          <div class="swatch" style="background:#14532d" onclick="setSidebarBg('#14532d',this)"></div>
+          <div class="swatch" style="background:#450a0a" onclick="setSidebarBg('#450a0a',this)"></div>
+          <div class="swatch" style="background:#1c1917" onclick="setSidebarBg('#1c1917',this)"></div>
+          <div class="swatch" style="background:#0c4a6e" onclick="setSidebarBg('#0c4a6e',this)"></div>
+          <div class="swatch" style="background:#1e293b" onclick="setSidebarBg('#1e293b',this)"></div>
+          <div class="swatch" style="background:#111827" onclick="setSidebarBg('#111827',this)"></div>
+        </div>
+        <div class="color-input-row">
+          <input type="color" id="sidebarCustom" value="#0f172a" oninput="setSidebarBgCustom(this.value)">
+          <input type="text" class="form-control" id="sidebarHex" value="#0f172a" placeholder="#0f172a">
+        </div>
+      </div>
+    </div>
+
+    <!-- Header Color -->
+    <div class="settings-section">
+      <div class="settings-section-title">Header Color</div>
+      <div class="color-section">
+        <div class="color-swatches" id="headerSwatches">
+          <div class="swatch active" style="background:#0f172a" onclick="setHeaderBg('#0f172a',this)"></div>
+          <div class="swatch" style="background:#ffffff" onclick="setHeaderBg('#ffffff',this)"></div>
+          <div class="swatch" style="background:#1e293b" onclick="setHeaderBg('#1e293b',this)"></div>
+          <div class="swatch" style="background:#111827" onclick="setHeaderBg('#111827',this)"></div>
+          <div class="swatch" style="background:#0c4a6e" onclick="setHeaderBg('#0c4a6e',this)"></div>
+          <div class="swatch" style="background:#1e1b4b" onclick="setHeaderBg('#1e1b4b',this)"></div>
+        </div>
+        <div class="color-input-row">
+          <input type="color" id="headerCustom" value="#0f172a" oninput="setHeaderBgCustom(this.value)">
+          <input type="text" class="form-control" value="#0f172a" placeholder="#0f172a">
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Color -->
+    <div class="settings-section">
+      <div class="settings-section-title">Footer Color</div>
+      <div class="color-section">
+        <div class="color-swatches" id="footerSwatches">
+          <div class="swatch active" style="background:#0f172a" onclick="setFooterBg('#0f172a',this)"></div>
+          <div class="swatch" style="background:#ffffff" onclick="setFooterBg('#ffffff',this)"></div>
+          <div class="swatch" style="background:#1e293b" onclick="setFooterBg('#1e293b',this)"></div>
+          <div class="swatch" style="background:#111827" onclick="setFooterBg('#111827',this)"></div>
+          <div class="swatch" style="background:#0c4a6e" onclick="setFooterBg('#0c4a6e',this)"></div>
+        </div>
+        <div class="color-input-row">
+          <input type="color" id="footerCustom" value="#0f172a" oninput="setFooterBgCustom(this.value)">
+          <input type="text" class="form-control" value="#0f172a" placeholder="#0f172a">
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Width -->
+    <div class="settings-section">
+      <div class="settings-section-title">Sidebar Width</div>
+      <div class="slider-row">
+        <input type="range" min="220" max="300" value="260" oninput="setSidebarWidth(this.value); document.getElementById('sidebarWidthVal').textContent=this.value+'px'">
+        <span class="slider-val" id="sidebarWidthVal">260px</span>
+      </div>
+    </div>
+
+    <!-- Animation Speed -->
+    <div class="settings-section">
+      <div class="settings-section-title">Animation Speed</div>
+      <div class="theme-options" style="gap:6px">
+        <div class="theme-opt" onclick="setAnimSpeed('fast',this)"><i class="fas fa-forward"></i>Fast</div>
+        <div class="theme-opt active" onclick="setAnimSpeed('normal',this)"><i class="fas fa-play"></i>Normal</div>
+        <div class="theme-opt" onclick="setAnimSpeed('slow',this)"><i class="fas fa-backward"></i>Slow</div>
+        <div class="theme-opt" onclick="setAnimSpeed('none',this)"><i class="fas fa-ban"></i>None</div>
+      </div>
+    </div>
+
+    <!-- Layout Options -->
+    <div class="settings-section">
+      <div class="settings-section-title">Layout Options</div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">Compact Sidebar</div>
+          <div class="toggle-desc">Collapse sidebar to icons only</div>
+        </div>
+        <div class="toggle-switch" id="toggleCompact" onclick="toggleCompactSidebar(this)"></div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">Fixed Header</div>
+          <div class="toggle-desc">Keep header always visible</div>
+        </div>
+        <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">Show Footer</div>
+          <div class="toggle-desc">Display bottom footer bar</div>
+        </div>
+        <div class="toggle-switch on" id="toggleFooter" onclick="toggleFooterVis(this)"></div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">Sidebar Hover Animation</div>
+          <div class="toggle-desc">Animate menu item hover effects</div>
+        </div>
+        <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+
+    <!-- Reset -->
+    <button class="btn btn-outline" style="width:100%" onclick="resetSettings()">
+      <i class="fas fa-rotate-left"></i> Reset to Defaults
+    </button>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}JDPanel — Web Hosting Control Panel{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;1,6..12,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    {% include 'base/sidebar.html' %}
+
+    <!-- ─── MOBILE OVERLAY ─── -->
+    <div id="mobile-overlay" onclick="closeMobileSidebar()"></div>
+
+    <!-- ─── SETTINGS OVERLAY ─── -->
+    <div class="settings-overlay" id="settingsOverlay" onclick="closeSettings()"></div>
+
+    {% include 'base/settings_panel.html' %}
+
+    <!-- ─── MAIN WRAPPER ─── -->
+    <div id="main-wrapper">
+        {% include 'base/header.html' %}
+
+        <!-- ─── CONTENT ─── -->
+        <main id="content">
+            {% block content %}{% endblock %}
+        </main>
+
+        {% include 'base/footer.html' %}
+    </div>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

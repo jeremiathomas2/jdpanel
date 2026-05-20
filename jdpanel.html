@@ -1,0 +1,2186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JDPanel — Web Hosting Control Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;1,6..12,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root {
+  --accent: #3B82F6;
+  --accent-hover: #2563EB;
+  --accent-light: rgba(59,130,246,0.12);
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --sidebar-text-active: #f1f5f9;
+  --sidebar-item-hover: rgba(255,255,255,0.06);
+  --sidebar-item-active: rgba(59,130,246,0.18);
+  --sidebar-border: rgba(255,255,255,0.07);
+  --sidebar-width: 260px;
+  --header-bg: #0f172a;
+  --header-border: rgba(255,255,255,0.07);
+  --header-text: #e2e8f0;
+  --footer-bg: #0f172a;
+  --footer-text: #64748b;
+  --footer-border: rgba(255,255,255,0.07);
+  --body-bg: #0b1120;
+  --card-bg: #131c31;
+  --card-border: rgba(255,255,255,0.07);
+  --card-hover: #192035;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --input-bg: #1e293b;
+  --input-border: rgba(255,255,255,0.12);
+  --badge-success: rgba(34,197,94,0.15);
+  --badge-success-text: #4ade80;
+  --badge-warning: rgba(251,191,36,0.15);
+  --badge-warning-text: #fbbf24;
+  --badge-danger: rgba(239,68,68,0.15);
+  --badge-danger-text: #f87171;
+  --badge-info: rgba(59,130,246,0.15);
+  --badge-info-text: #60a5fa;
+  --shadow: 0 4px 24px rgba(0,0,0,0.35);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-lg: 14px;
+  --transition: all 0.22s cubic-bezier(0.4,0,0.2,1);
+  --sidebar-logo-bg: #1e3a8a;
+}
+[data-theme="light"] {
+  --accent: #2563EB;
+  --accent-hover: #1d4ed8;
+  --accent-light: rgba(37,99,235,0.1);
+  --sidebar-bg: #1e293b;
+  --sidebar-text: #94a3b8;
+  --sidebar-text-active: #ffffff;
+  --sidebar-item-hover: rgba(255,255,255,0.08);
+  --sidebar-item-active: rgba(37,99,235,0.22);
+  --sidebar-border: rgba(255,255,255,0.08);
+  --header-bg: #ffffff;
+  --header-border: #e2e8f0;
+  --header-text: #1e293b;
+  --footer-bg: #ffffff;
+  --footer-text: #94a3b8;
+  --footer-border: #e2e8f0;
+  --body-bg: #f1f5f9;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --card-hover: #f8fafc;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --input-bg: #f8fafc;
+  --input-border: #e2e8f0;
+  --badge-success: rgba(34,197,94,0.12);
+  --badge-success-text: #16a34a;
+  --badge-warning: rgba(251,191,36,0.12);
+  --badge-warning-text: #d97706;
+  --badge-danger: rgba(239,68,68,0.12);
+  --badge-danger-text: #dc2626;
+  --badge-info: rgba(37,99,235,0.12);
+  --badge-info-text: #2563eb;
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  background: var(--body-bg);
+  color: var(--text-primary);
+  display: flex;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.25); border-radius: 99px; }
+
+/* ─── SIDEBAR ─── */
+#sidebar {
+  width: var(--sidebar-width);
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 200;
+  border-right: 1px solid var(--sidebar-border);
+  transition: var(--transition), background 0.3s ease;
+  overflow: hidden;
+}
+#sidebar.collapsed { width: 64px; }
+#sidebar.mobile-open { transform: translateX(0) !important; }
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  height: 60px;
+  border-bottom: 1px solid var(--sidebar-border);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.logo-icon {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #3B82F6, #1d4ed8);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 16px; font-weight: 800;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(59,130,246,0.4);
+}
+.logo-text {
+  color: var(--sidebar-text-active);
+  font-size: 17px; font-weight: 800;
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.logo-text span { color: var(--accent); }
+#sidebar.collapsed .logo-text { opacity: 0; pointer-events: none; }
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 0;
+}
+.sidebar-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+  padding: 14px 20px 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.2s;
+}
+#sidebar.collapsed .sidebar-section-label { opacity: 0; height: 0; padding: 0; }
+
+.nav-item {
+  position: relative;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 16px;
+  margin: 1px 8px;
+  border-radius: var(--radius-sm);
+  color: var(--sidebar-text);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  user-select: none;
+}
+.nav-link:hover {
+  background: var(--sidebar-item-hover);
+  color: var(--sidebar-text-active);
+}
+.nav-link.active {
+  background: var(--sidebar-item-active);
+  color: var(--sidebar-text-active);
+}
+.nav-link.active .nav-icon { color: var(--accent); }
+.nav-icon {
+  width: 20px; height: 20px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 15px;
+  transition: var(--transition);
+}
+.nav-label { flex: 1; transition: opacity 0.2s; }
+#sidebar.collapsed .nav-label,
+#sidebar.collapsed .nav-chevron { opacity: 0; pointer-events: none; }
+.nav-chevron {
+  font-size: 11px;
+  transition: transform 0.25s ease, opacity 0.2s;
+  color: var(--text-muted);
+}
+.nav-item.open > .nav-link .nav-chevron { transform: rotate(180deg); }
+
+/* Active indicator bar */
+.nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 18px;
+  background: var(--accent);
+  border-radius: 99px;
+}
+
+/* Dropdown submenu */
+.nav-submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.32s cubic-bezier(0.4,0,0.2,1);
+  background: rgba(0,0,0,0.15);
+  border-radius: var(--radius-sm);
+  margin: 0 8px;
+}
+.nav-item.open > .nav-submenu { max-height: 600px; }
+.nav-submenu .sub-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 14px 7px 36px;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  margin: 1px 4px;
+  transition: var(--transition);
+  cursor: pointer;
+}
+.nav-submenu .sub-link:hover {
+  background: var(--sidebar-item-hover);
+  color: var(--sidebar-text-active);
+}
+.nav-submenu .sub-link.active {
+  background: var(--sidebar-item-active);
+  color: var(--sidebar-text-active);
+}
+.sub-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+.sub-link:hover .sub-dot,
+.sub-link.active .sub-dot { background: var(--accent); }
+#sidebar.collapsed .nav-submenu { display: none; }
+
+/* Tooltip for collapsed sidebar */
+#sidebar.collapsed .nav-link { justify-content: center; padding: 9px 0; }
+.nav-tooltip {
+  position: absolute;
+  left: 70px; top: 50%;
+  transform: translateY(-50%);
+  background: #1e293b;
+  color: #e2e8f0;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s;
+  z-index: 9999;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+#sidebar.collapsed .nav-item:hover .nav-tooltip { opacity: 1; }
+
+.sidebar-footer {
+  padding: 12px 8px;
+  border-top: 1px solid var(--sidebar-border);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.sidebar-user:hover { background: var(--sidebar-item-hover); }
+.user-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 13px; font-weight: 700;
+  flex-shrink: 0;
+}
+.user-info { overflow: hidden; transition: opacity 0.2s; }
+.user-name { color: var(--sidebar-text-active); font-size: 13px; font-weight: 700; white-space: nowrap; }
+.user-role { color: var(--text-muted); font-size: 11px; font-weight: 600; white-space: nowrap; }
+#sidebar.collapsed .user-info { opacity: 0; }
+
+/* ─── MAIN LAYOUT ─── */
+#main-wrapper {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  transition: margin-left 0.22s cubic-bezier(0.4,0,0.2,1);
+}
+#main-wrapper.collapsed { margin-left: 64px; }
+
+/* ─── HEADER ─── */
+#header {
+  height: 60px;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--header-border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+.header-toggle {
+  width: 34px; height: 34px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--input-border);
+  background: transparent;
+  color: var(--header-text);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 16px;
+}
+.header-toggle:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+.header-breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  color: var(--text-secondary); font-size: 13px; font-weight: 600;
+}
+.breadcrumb-sep { color: var(--text-muted); }
+.breadcrumb-current { color: var(--header-text); font-weight: 700; }
+.header-spacer { flex: 1; }
+
+.header-search {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+  height: 34px;
+  transition: var(--transition);
+  width: 220px;
+}
+.header-search:focus-within { border-color: var(--accent); width: 260px; box-shadow: 0 0 0 3px var(--accent-light); }
+.header-search i { color: var(--text-muted); font-size: 13px; }
+.header-search input {
+  background: transparent;
+  border: none; outline: none;
+  color: var(--text-primary);
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 13px; font-weight: 600;
+  width: 100%;
+}
+.header-search input::placeholder { color: var(--text-muted); }
+
+.header-btn {
+  width: 34px; height: 34px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--input-border);
+  background: transparent;
+  color: var(--header-text);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 15px;
+  position: relative;
+}
+.header-btn:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+.badge-dot {
+  position: absolute;
+  top: 6px; right: 6px;
+  width: 7px; height: 7px;
+  background: #ef4444;
+  border-radius: 50%;
+  border: 1.5px solid var(--header-bg);
+}
+
+.header-divider { width: 1px; height: 24px; background: var(--input-border); }
+
+/* ─── CONTENT AREA ─── */
+#content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* ─── PAGE VIEWS ─── */
+.page-view { display: none; }
+.page-view.active { display: block; animation: fadeUp 0.28s ease; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── PAGE HEADER ─── */
+.page-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+}
+.page-title { font-size: 20px; font-weight: 800; color: var(--text-primary); }
+.page-subtitle { font-size: 13px; color: var(--text-secondary); font-weight: 600; margin-top: 2px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(59,130,246,0.4); }
+.btn-outline {
+  background: transparent;
+  color: var(--text-primary);
+  border-color: var(--input-border);
+}
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.btn-danger { background: rgba(239,68,68,0.12); color: #f87171; border-color: rgba(239,68,68,0.2); }
+.btn-danger:hover { background: rgba(239,68,68,0.2); }
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+
+/* ─── STATS GRID ─── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+  cursor: default;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--stat-color, var(--accent)), transparent);
+}
+.stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--accent); }
+.stat-icon {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+  margin-bottom: 12px;
+  background: var(--icon-bg, var(--accent-light));
+  color: var(--icon-color, var(--accent));
+}
+.stat-value { font-size: 24px; font-weight: 800; color: var(--text-primary); line-height: 1; }
+.stat-label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-trend {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 700;
+  margin-top: 8px;
+}
+.trend-up { color: #4ade80; }
+.trend-down { color: #f87171; }
+
+/* ─── PROGRESS BAR ─── */
+.progress-bar {
+  height: 6px;
+  background: var(--input-bg);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent), #8B5CF6);
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+.card:hover { border-color: rgba(59,130,246,0.2); }
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--card-border);
+}
+.card-title { font-size: 14px; font-weight: 800; color: var(--text-primary); }
+.card-body { padding: 20px; }
+
+/* ─── TABLE ─── */
+.table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--card-border); }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--input-bg); }
+th {
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+td {
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-top: 1px solid var(--card-border);
+}
+tbody tr { transition: var(--transition); }
+tbody tr:hover { background: var(--card-hover); }
+
+/* ─── BADGES ─── */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px;
+  border-radius: 99px;
+  font-size: 11px; font-weight: 700;
+}
+.badge-success { background: var(--badge-success); color: var(--badge-success-text); }
+.badge-warning { background: var(--badge-warning); color: var(--badge-warning-text); }
+.badge-danger { background: var(--badge-danger); color: var(--badge-danger-text); }
+.badge-info { background: var(--badge-info); color: var(--badge-info-text); }
+
+/* ─── DONUT CHART ─── */
+.donut-wrap { position: relative; display: inline-block; }
+.donut-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+.donut-pct { font-size: 22px; font-weight: 800; color: var(--text-primary); }
+.donut-sub { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+
+/* ─── RESOURCE METER ─── */
+.resource-row {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px;
+}
+.resource-label { width: 80px; font-size: 12px; font-weight: 700; color: var(--text-secondary); flex-shrink: 0; }
+.resource-bar { flex: 1; height: 8px; background: var(--input-bg); border-radius: 99px; overflow: hidden; }
+.resource-bar-fill { height: 100%; border-radius: 99px; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
+.resource-val { width: 44px; text-align: right; font-size: 12px; font-weight: 700; color: var(--text-primary); flex-shrink: 0; }
+
+/* ─── SERVICE STATUS ─── */
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px,1fr));
+  gap: 12px;
+}
+.service-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  display: flex; align-items: center; gap: 10px;
+  transition: var(--transition);
+}
+.service-card:hover { border-color: rgba(59,130,246,0.25); transform: translateY(-2px); }
+.service-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dot-green { background: #4ade80; box-shadow: 0 0 8px rgba(74,222,128,0.5); }
+.dot-red { background: #f87171; box-shadow: 0 0 8px rgba(248,113,113,0.5); }
+.dot-yellow { background: #fbbf24; box-shadow: 0 0 8px rgba(251,191,36,0.5); }
+.service-name { font-size: 12.5px; font-weight: 700; color: var(--text-primary); }
+.service-status { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+
+/* ─── ACTIVITY FEED ─── */
+.activity-item {
+  display: flex; gap: 12px; padding: 12px 0;
+  border-bottom: 1px solid var(--card-border);
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-icon {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.activity-text { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.activity-time { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-top: 3px; }
+
+/* ─── GRID LAYOUTS ─── */
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 16px; }
+
+/* ─── FORM ELEMENTS ─── */
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.form-control {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 13px; font-weight: 600;
+  padding: 9px 12px;
+  outline: none;
+  transition: var(--transition);
+}
+.form-control:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+.form-control::placeholder { color: var(--text-muted); }
+select.form-control { cursor: pointer; }
+
+/* ─── SETTINGS PANEL ─── */
+#settings-panel {
+  position: fixed;
+  top: 0; right: -360px;
+  width: 360px; height: 100vh;
+  background: var(--card-bg);
+  border-left: 1px solid var(--card-border);
+  z-index: 500;
+  transition: right 0.3s cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column;
+  box-shadow: -10px 0 40px rgba(0,0,0,0.3);
+}
+#settings-panel.open { right: 0; }
+.settings-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 499;
+  display: none;
+  backdrop-filter: blur(2px);
+}
+.settings-overlay.show { display: block; }
+.settings-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--card-border);
+  flex-shrink: 0;
+}
+.settings-title { font-size: 15px; font-weight: 800; color: var(--text-primary); }
+.settings-close {
+  width: 30px; height: 30px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--input-border);
+  background: transparent;
+  color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 14px;
+  transition: var(--transition);
+}
+.settings-close:hover { background: var(--badge-danger); color: var(--badge-danger-text); border-color: transparent; }
+.settings-body { flex: 1; overflow-y: auto; padding: 20px; }
+.settings-section { margin-bottom: 24px; }
+.settings-section-title {
+  font-size: 11px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-muted); margin-bottom: 12px;
+}
+
+/* Theme toggle */
+.theme-options { display: flex; gap: 8px; }
+.theme-opt {
+  flex: 1; padding: 10px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--input-border);
+  background: var(--input-bg);
+  cursor: pointer;
+  text-align: center;
+  font-size: 12px; font-weight: 700;
+  color: var(--text-secondary);
+  transition: var(--transition);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.theme-opt.active { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.theme-opt i { font-size: 18px; }
+
+/* Color picker */
+.color-section { margin-bottom: 18px; }
+.color-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; display: block; }
+.color-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+.swatch {
+  width: 30px; height: 30px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: var(--transition);
+  position: relative;
+}
+.swatch:hover { transform: scale(1.15); }
+.swatch.active::after {
+  content: '\f00c';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 11px;
+}
+.swatch.active { border-color: white; box-shadow: 0 0 0 2px var(--accent); }
+
+/* Custom color input */
+.color-input-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.color-input-row input[type=color] { width: 34px; height: 34px; border-radius: var(--radius-sm); border: 1px solid var(--input-border); padding: 2px; cursor: pointer; background: var(--input-bg); }
+.color-input-row input[type=text] { flex: 1; }
+
+/* Slider */
+.slider-row { display: flex; align-items: center; gap: 10px; }
+.slider-row input[type=range] { flex: 1; accent-color: var(--accent); }
+.slider-val { font-size: 12px; font-weight: 700; color: var(--text-primary); min-width: 30px; }
+
+/* Toggle switch */
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--card-border); }
+.toggle-row:last-child { border-bottom: none; }
+.toggle-info { flex: 1; }
+.toggle-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.toggle-desc { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
+.toggle-switch {
+  width: 40px; height: 22px;
+  background: var(--input-border);
+  border-radius: 99px;
+  position: relative;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.toggle-switch.on { background: var(--accent); }
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  left: 2px; top: 2px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.22s ease;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.toggle-switch.on::after { transform: translateX(18px); }
+
+/* ─── FOOTER ─── */
+#footer {
+  background: var(--footer-bg);
+  border-top: 1px solid var(--footer-border);
+  padding: 12px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+  transition: background 0.3s ease;
+}
+.footer-text { font-size: 12px; font-weight: 600; color: var(--footer-text); }
+.footer-links { display: flex; gap: 16px; }
+.footer-link { font-size: 12px; font-weight: 600; color: var(--footer-text); text-decoration: none; transition: color 0.2s; }
+.footer-link:hover { color: var(--accent); }
+.footer-status { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--badge-success-text); }
+
+/* ─── MOBILE OVERLAY ─── */
+#mobile-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 150;
+}
+@media (max-width: 768px) {
+  #sidebar { transform: translateX(-100%); }
+  #sidebar.mobile-open { transform: translateX(0); }
+  #main-wrapper { margin-left: 0 !important; }
+  #mobile-overlay.show { display: block; }
+  .header-search { display: none; }
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+}
+
+/* ─── ALERTS ─── */
+.alert {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  font-size: 13px; font-weight: 600;
+}
+.alert-info { background: var(--badge-info); color: var(--badge-info-text); border-left: 3px solid var(--accent); }
+.alert-warning { background: var(--badge-warning); color: var(--badge-warning-text); border-left: 3px solid #fbbf24; }
+.alert-danger { background: var(--badge-danger); color: var(--badge-danger-text); border-left: 3px solid #ef4444; }
+.alert-success { background: var(--badge-success); color: var(--badge-success-text); border-left: 3px solid #22c55e; }
+
+/* ─── DNS RECORDS ─── */
+.dns-type-badge {
+  display: inline-block; padding: 2px 8px;
+  border-radius: 4px; font-size: 11px; font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+/* ─── NOTIFICATION DROPDOWN ─── */
+.notif-dropdown {
+  position: absolute;
+  top: calc(100% + 8px); right: 0;
+  width: 320px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  z-index: 300;
+  display: none;
+}
+.notif-dropdown.show { display: block; animation: fadeUp 0.2s ease; }
+.notif-header { padding: 12px 16px; border-bottom: 1px solid var(--card-border); display: flex; align-items: center; justify-content: space-between; }
+.notif-title { font-size: 13px; font-weight: 800; color: var(--text-primary); }
+.notif-item { display: flex; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--card-border); cursor: pointer; transition: var(--transition); }
+.notif-item:hover { background: var(--card-hover); }
+.notif-item:last-child { border-bottom: none; }
+.notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 5px; flex-shrink: 0; }
+.notif-text { font-size: 12.5px; font-weight: 600; color: var(--text-primary); }
+.notif-time { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-top: 3px; }
+
+/* Profile dropdown */
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px); right: 0;
+  width: 200px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  z-index: 300;
+  display: none; padding: 6px;
+}
+.profile-dropdown.show { display: block; animation: fadeUp 0.2s ease; }
+.profile-menu-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 10px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 600;
+  color: var(--text-primary); cursor: pointer;
+  transition: var(--transition); text-decoration: none;
+}
+.profile-menu-item:hover { background: var(--accent-light); color: var(--accent); }
+.profile-menu-item.danger { color: var(--badge-danger-text); }
+.profile-menu-item.danger:hover { background: var(--badge-danger); }
+.profile-menu-sep { height: 1px; background: var(--card-border); margin: 4px 0; }
+
+/* Hoverable header buttons relative container */
+.header-btn-wrap { position: relative; }
+
+/* Disk bar small */
+.mini-bar { height: 4px; background: var(--input-bg); border-radius: 99px; margin-top: 6px; overflow: hidden; }
+.mini-fill { height: 100%; border-radius: 99px; }
+
+/* Animations transitions customizable */
+body.anim-fast * { transition-duration: 0.12s !important; }
+body.anim-slow * { transition-duration: 0.45s !important; }
+body.anim-none * { transition: none !important; animation: none !important; }
+
+/* ─── SECTION DIVIDER ─── */
+.section-divider { height: 1px; background: var(--card-border); margin: 24px 0; }
+
+/* Hover card detail */
+.info-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: var(--transition);
+}
+.info-card:hover { box-shadow: var(--shadow-sm); }
+
+/* Log terminal style */
+.log-terminal {
+  background: #020817;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius);
+  padding: 16px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #94a3b8;
+  max-height: 260px;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+.log-line { margin-bottom: 2px; }
+.log-time { color: #475569; }
+.log-ok { color: #4ade80; }
+.log-warn { color: #fbbf24; }
+.log-err { color: #f87171; }
+.log-info { color: #60a5fa; }
+
+/* Accent color transition */
+* { transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease; }
+</style>
+</head>
+<body>
+
+<!-- ─── SIDEBAR ─── -->
+<aside id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">JD</div>
+    <div class="logo-text">JD<span>Panel</span></div>
+  </div>
+
+  <nav class="sidebar-nav" id="sidebarNav">
+    <!-- MAIN -->
+    <div class="sidebar-section-label">Main</div>
+
+    <div class="nav-item">
+      <div class="nav-link active" onclick="navigate('dashboard',this)">
+        <div class="nav-icon"><i class="fas fa-th-large"></i></div>
+        <span class="nav-label">Dashboard</span>
+        <div class="nav-tooltip">Dashboard</div>
+      </div>
+    </div>
+
+    <!-- SERVER -->
+    <div class="sidebar-section-label">Server</div>
+
+    <div class="nav-item" id="nav-server">
+      <div class="nav-link" onclick="toggleMenu('nav-server')">
+        <div class="nav-icon"><i class="fas fa-server"></i></div>
+        <span class="nav-label">Server Management</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Server</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link active" onclick="navigate('server-info',this)"><div class="sub-dot"></div>Server Info</div>
+        <div class="sub-link" onclick="navigate('services',this)"><div class="sub-dot"></div>Services Control</div>
+        <div class="sub-link" onclick="navigate('cron',this)"><div class="sub-dot"></div>Cron Jobs</div>
+        <div class="sub-link" onclick="navigate('logs',this)"><div class="sub-dot"></div>System Logs</div>
+        <div class="sub-link" onclick="navigate('packages-update',this)"><div class="sub-dot"></div>Package Updates</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-monitor">
+      <div class="nav-link" onclick="toggleMenu('nav-monitor')">
+        <div class="nav-icon"><i class="fas fa-chart-area"></i></div>
+        <span class="nav-label">Resource Monitor</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Monitor</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('resources',this)"><div class="sub-dot"></div>CPU / RAM / Disk</div>
+        <div class="sub-link" onclick="navigate('network',this)"><div class="sub-dot"></div>Network Traffic</div>
+        <div class="sub-link" onclick="navigate('processes',this)"><div class="sub-dot"></div>Process Viewer</div>
+      </div>
+    </div>
+
+    <!-- HOSTING -->
+    <div class="sidebar-section-label">Hosting</div>
+
+    <div class="nav-item" id="nav-websites">
+      <div class="nav-link" onclick="toggleMenu('nav-websites')">
+        <div class="nav-icon"><i class="fas fa-globe"></i></div>
+        <span class="nav-label">Websites</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Websites</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('websites',this)"><div class="sub-dot"></div>All Websites</div>
+        <div class="sub-link" onclick="navigate('domains',this)"><div class="sub-dot"></div>Domains</div>
+        <div class="sub-link" onclick="navigate('subdomains',this)"><div class="sub-dot"></div>Subdomains</div>
+        <div class="sub-link" onclick="navigate('parked',this)"><div class="sub-dot"></div>Parked Domains</div>
+        <div class="sub-link" onclick="navigate('redirects',this)"><div class="sub-dot"></div>Redirects</div>
+      </div>
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-link" onclick="navigate('filemanager',this)">
+        <div class="nav-icon"><i class="fas fa-folder-open"></i></div>
+        <span class="nav-label">File Manager</span>
+        <div class="nav-tooltip">Files</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-db">
+      <div class="nav-link" onclick="toggleMenu('nav-db')">
+        <div class="nav-icon"><i class="fas fa-database"></i></div>
+        <span class="nav-label">Databases</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Databases</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('databases',this)"><div class="sub-dot"></div>MySQL / MariaDB</div>
+        <div class="sub-link" onclick="navigate('db-users',this)"><div class="sub-dot"></div>DB Users</div>
+        <div class="sub-link" onclick="navigate('phpmyadmin',this)"><div class="sub-dot"></div>phpMyAdmin</div>
+      </div>
+    </div>
+
+    <!-- SERVICES -->
+    <div class="sidebar-section-label">Services</div>
+
+    <div class="nav-item" id="nav-email">
+      <div class="nav-link" onclick="toggleMenu('nav-email')">
+        <div class="nav-icon"><i class="fas fa-envelope"></i></div>
+        <span class="nav-label">Email Hosting</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Email</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('email',this)"><div class="sub-dot"></div>Email Accounts</div>
+        <div class="sub-link" onclick="navigate('webmail',this)"><div class="sub-dot"></div>Webmail</div>
+        <div class="sub-link" onclick="navigate('forwarders',this)"><div class="sub-dot"></div>Forwarders</div>
+        <div class="sub-link" onclick="navigate('autoresponders',this)"><div class="sub-dot"></div>Auto Responders</div>
+        <div class="sub-link" onclick="navigate('spam',this)"><div class="sub-dot"></div>Spam Filters</div>
+        <div class="sub-link" onclick="navigate('dkim',this)"><div class="sub-dot"></div>DKIM / SPF</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-dns">
+      <div class="nav-link" onclick="toggleMenu('nav-dns')">
+        <div class="nav-icon"><i class="fas fa-network-wired"></i></div>
+        <span class="nav-label">DNS Management</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">DNS</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('dns',this)"><div class="sub-dot"></div>DNS Zones</div>
+        <div class="sub-link" onclick="navigate('dns-records',this)"><div class="sub-dot"></div>DNS Records</div>
+        <div class="sub-link" onclick="navigate('dns-propagation',this)"><div class="sub-dot"></div>Propagation Check</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-ssl">
+      <div class="nav-link" onclick="toggleMenu('nav-ssl')">
+        <div class="nav-icon"><i class="fas fa-shield-halved"></i></div>
+        <span class="nav-label">SSL / HTTPS</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">SSL</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('ssl',this)"><div class="sub-dot"></div>SSL Certificates</div>
+        <div class="sub-link" onclick="navigate('ssl-install',this)"><div class="sub-dot"></div>Auto Install SSL</div>
+        <div class="sub-link" onclick="navigate('ssl-custom',this)"><div class="sub-dot"></div>Custom SSL Upload</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-ftp">
+      <div class="nav-link" onclick="toggleMenu('nav-ftp')">
+        <div class="nav-icon"><i class="fas fa-plug"></i></div>
+        <span class="nav-label">FTP Accounts</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">FTP</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('ftp',this)"><div class="sub-dot"></div>FTP Accounts</div>
+        <div class="sub-link" onclick="navigate('ftp-logs',this)"><div class="sub-dot"></div>FTP Logs</div>
+      </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="sidebar-section-label">Admin</div>
+
+    <div class="nav-item" id="nav-security">
+      <div class="nav-link" onclick="toggleMenu('nav-security')">
+        <div class="nav-icon"><i class="fas fa-lock"></i></div>
+        <span class="nav-label">Security</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Security</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('security',this)"><div class="sub-dot"></div>Firewall Manager</div>
+        <div class="sub-link" onclick="navigate('fail2ban',this)"><div class="sub-dot"></div>Fail2Ban</div>
+        <div class="sub-link" onclick="navigate('malware',this)"><div class="sub-dot"></div>Malware Scanner</div>
+        <div class="sub-link" onclick="navigate('ip-block',this)"><div class="sub-dot"></div>IP Blocking</div>
+        <div class="sub-link" onclick="navigate('modsecurity',this)"><div class="sub-dot"></div>ModSecurity</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-backup">
+      <div class="nav-link" onclick="toggleMenu('nav-backup')">
+        <div class="nav-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+        <span class="nav-label">Backups</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Backups</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('backups',this)"><div class="sub-dot"></div>Backup Manager</div>
+        <div class="sub-link" onclick="navigate('backup-schedule',this)"><div class="sub-dot"></div>Schedules</div>
+        <div class="sub-link" onclick="navigate('backup-restore',this)"><div class="sub-dot"></div>Restore</div>
+        <div class="sub-link" onclick="navigate('backup-remote',this)"><div class="sub-dot"></div>Remote Storage</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-packages">
+      <div class="nav-link" onclick="toggleMenu('nav-packages')">
+        <div class="nav-icon"><i class="fas fa-box-open"></i></div>
+        <span class="nav-label">Hosting Packages</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Packages</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('packages',this)"><div class="sub-dot"></div>All Packages</div>
+        <div class="sub-link" onclick="navigate('resellers',this)"><div class="sub-dot"></div>Reseller Accounts</div>
+        <div class="sub-link" onclick="navigate('users',this)"><div class="sub-dot"></div>Hosting Users</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-billing">
+      <div class="nav-link" onclick="toggleMenu('nav-billing')">
+        <div class="nav-icon"><i class="fas fa-credit-card"></i></div>
+        <span class="nav-label">Billing</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Billing</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('billing',this)"><div class="sub-dot"></div>Invoices</div>
+        <div class="sub-link" onclick="navigate('subscriptions',this)"><div class="sub-dot"></div>Subscriptions</div>
+        <div class="sub-link" onclick="navigate('payments',this)"><div class="sub-dot"></div>Payment Gateway</div>
+      </div>
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-link" onclick="navigate('api',this)">
+        <div class="nav-icon"><i class="fas fa-code"></i></div>
+        <span class="nav-label">API & Webhooks</span>
+        <div class="nav-tooltip">API</div>
+      </div>
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-link" onclick="navigate('notifications',this)">
+        <div class="nav-icon"><i class="fas fa-bell"></i></div>
+        <span class="nav-label">Notifications</span>
+        <div class="nav-tooltip">Alerts</div>
+      </div>
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-link" onclick="navigate('settings-page',this)">
+        <div class="nav-icon"><i class="fas fa-gear"></i></div>
+        <span class="nav-label">Settings</span>
+        <div class="nav-tooltip">Settings</div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="user-avatar">SA</div>
+      <div class="user-info">
+        <div class="user-name">Super Admin</div>
+        <div class="user-role">Administrator</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ─── MOBILE OVERLAY ─── -->
+<div id="mobile-overlay" onclick="closeMobileSidebar()"></div>
+
+<!-- ─── SETTINGS OVERLAY ─── -->
+<div class="settings-overlay" id="settingsOverlay" onclick="closeSettings()"></div>
+
+<!-- ─── SETTINGS PANEL ─── -->
+<div id="settings-panel">
+  <div class="settings-header">
+    <div class="settings-title"><i class="fas fa-palette" style="color:var(--accent);margin-right:8px"></i>Appearance Settings</div>
+    <button class="settings-close" onclick="closeSettings()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="settings-body">
+
+    <!-- Theme -->
+    <div class="settings-section">
+      <div class="settings-section-title">Color Mode</div>
+      <div class="theme-options">
+        <div class="theme-opt" id="themeLight" onclick="setTheme('light')">
+          <i class="fas fa-sun"></i>Light
+        </div>
+        <div class="theme-opt active" id="themeDark" onclick="setTheme('dark')">
+          <i class="fas fa-moon"></i>Dark
+        </div>
+        <div class="theme-opt" id="themeAuto" onclick="setTheme('auto')">
+          <i class="fas fa-circle-half-stroke"></i>Auto
+        </div>
+      </div>
+    </div>
+
+    <!-- Accent Color -->
+    <div class="settings-section">
+      <div class="settings-section-title">Accent Color</div>
+      <div class="color-section">
+        <span class="color-label">Select accent</span>
+        <div class="color-swatches" id="accentSwatches">
+          <div class="swatch active" style="background:#3B82F6" data-color="#3B82F6" onclick="setAccent('#3B82F6','#2563EB',this)"></div>
+          <div class="swatch" style="background:#8B5CF6" data-color="#8B5CF6" onclick="setAccent('#8B5CF6','#7C3AED',this)"></div>
+          <div class="swatch" style="background:#EC4899" data-color="#EC4899" onclick="setAccent('#EC4899','#db2777',this)"></div>
+          <div class="swatch" style="background:#10B981" data-color="#10B981" onclick="setAccent('#10B981','#059669',this)"></div>
+          <div class="swatch" style="background:#F59E0B" data-color="#F59E0B" onclick="setAccent('#F59E0B','#D97706',this)"></div>
+          <div class="swatch" style="background:#EF4444" data-color="#EF4444" onclick="setAccent('#EF4444','#DC2626',this)"></div>
+          <div class="swatch" style="background:#06B6D4" data-color="#06B6D4" onclick="setAccent('#06B6D4','#0891B2',this)"></div>
+          <div class="swatch" style="background:#F97316" data-color="#F97316" onclick="setAccent('#F97316','#EA580C',this)"></div>
+        </div>
+        <div class="color-input-row">
+          <input type="color" id="accentCustom" value="#3B82F6" oninput="setAccentCustom(this.value)">
+          <input type="text" class="form-control" id="accentHex" value="#3B82F6" placeholder="#3B82F6" oninput="setAccentHexInput(this.value)">
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Color -->
+    <div class="settings-section">
+      <div class="settings-section-title">Sidebar Color</div>
+      <div class="color-section">
+        <span class="color-label">Background</span>
+        <div class="color-swatches" id="sidebarSwatches">
+          <div class="swatch active" style="background:#0f172a" onclick="setSidebarBg('#0f172a',this)"></div>
+          <div class="swatch" style="background:#1e1b4b" onclick="setSidebarBg('#1e1b4b',this)"></div>
+          <div class="swatch" style="background:#14532d" onclick="setSidebarBg('#14532d',this)"></div>
+          <div class="swatch" style="background:#450a0a" onclick="setSidebarBg('#450a0a',this)"></div>
+          <div class="swatch" style="background:#1c1917" onclick="setSidebarBg('#1c1917',this)"></div>
+          <div class="swatch" style="background:#0c4a6e" onclick="setSidebarBg('#0c4a6e',this)"></div>
+          <div class="swatch" style="background:#1e293b" onclick="setSidebarBg('#1e293b',this)"></div>
+          <div class="swatch" style="background:#111827" onclick="setSidebarBg('#111827',this)"></div>
+        </div>
+        <div class="color-input-row">
+          <input type="color" id="sidebarCustom" value="#0f172a" oninput="setSidebarBgCustom(this.value)">
+          <input type="text" class="form-control" id="sidebarHex" value="#0f172a" placeholder="#0f172a">
+        </div>
+      </div>
+    </div>
+
+    <!-- Header Color -->
+    <div class="settings-section">
+      <div class="settings-section-title">Header Color</div>
+      <div class="color-section">
+        <div class="color-swatches" id="headerSwatches">
+          <div class="swatch active" style="background:#0f172a" onclick="setHeaderBg('#0f172a',this)"></div>
+          <div class="swatch" style="background:#ffffff" onclick="setHeaderBg('#ffffff',this)"></div>
+          <div class="swatch" style="background:#1e293b" onclick="setHeaderBg('#1e293b',this)"></div>
+          <div class="swatch" style="background:#111827" onclick="setHeaderBg('#111827',this)"></div>
+          <div class="swatch" style="background:#0c4a6e" onclick="setHeaderBg('#0c4a6e',this)"></div>
+          <div class="swatch" style="background:#1e1b4b" onclick="setHeaderBg('#1e1b4b',this)"></div>
+        </div>
+        <div class="color-input-row">
+          <input type="color" id="headerCustom" value="#0f172a" oninput="setHeaderBgCustom(this.value)">
+          <input type="text" class="form-control" value="#0f172a" placeholder="#0f172a">
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Color -->
+    <div class="settings-section">
+      <div class="settings-section-title">Footer Color</div>
+      <div class="color-section">
+        <div class="color-swatches" id="footerSwatches">
+          <div class="swatch active" style="background:#0f172a" onclick="setFooterBg('#0f172a',this)"></div>
+          <div class="swatch" style="background:#ffffff" onclick="setFooterBg('#ffffff',this)"></div>
+          <div class="swatch" style="background:#1e293b" onclick="setFooterBg('#1e293b',this)"></div>
+          <div class="swatch" style="background:#111827" onclick="setFooterBg('#111827',this)"></div>
+          <div class="swatch" style="background:#0c4a6e" onclick="setFooterBg('#0c4a6e',this)"></div>
+        </div>
+        <div class="color-input-row">
+          <input type="color" id="footerCustom" value="#0f172a" oninput="setFooterBgCustom(this.value)">
+          <input type="text" class="form-control" value="#0f172a" placeholder="#0f172a">
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Width -->
+    <div class="settings-section">
+      <div class="settings-section-title">Sidebar Width</div>
+      <div class="slider-row">
+        <input type="range" min="220" max="300" value="260" oninput="setSidebarWidth(this.value); document.getElementById('sidebarWidthVal').textContent=this.value+'px'">
+        <span class="slider-val" id="sidebarWidthVal">260px</span>
+      </div>
+    </div>
+
+    <!-- Animation Speed -->
+    <div class="settings-section">
+      <div class="settings-section-title">Animation Speed</div>
+      <div class="theme-options" style="gap:6px">
+        <div class="theme-opt" onclick="setAnimSpeed('fast',this)"><i class="fas fa-forward"></i>Fast</div>
+        <div class="theme-opt active" onclick="setAnimSpeed('normal',this)"><i class="fas fa-play"></i>Normal</div>
+        <div class="theme-opt" onclick="setAnimSpeed('slow',this)"><i class="fas fa-backward"></i>Slow</div>
+        <div class="theme-opt" onclick="setAnimSpeed('none',this)"><i class="fas fa-ban"></i>None</div>
+      </div>
+    </div>
+
+    <!-- Layout Options -->
+    <div class="settings-section">
+      <div class="settings-section-title">Layout Options</div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">Compact Sidebar</div>
+          <div class="toggle-desc">Collapse sidebar to icons only</div>
+        </div>
+        <div class="toggle-switch" id="toggleCompact" onclick="toggleCompactSidebar(this)"></div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">Fixed Header</div>
+          <div class="toggle-desc">Keep header always visible</div>
+        </div>
+        <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">Show Footer</div>
+          <div class="toggle-desc">Display bottom footer bar</div>
+        </div>
+        <div class="toggle-switch on" id="toggleFooter" onclick="toggleFooterVis(this)"></div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">Sidebar Hover Animation</div>
+          <div class="toggle-desc">Animate menu item hover effects</div>
+        </div>
+        <div class="toggle-switch on" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+
+    <!-- Reset -->
+    <button class="btn btn-outline" style="width:100%" onclick="resetSettings()">
+      <i class="fas fa-rotate-left"></i> Reset to Defaults
+    </button>
+  </div>
+</div>
+
+<!-- ─── MAIN WRAPPER ─── -->
+<div id="main-wrapper">
+
+  <!-- ─── HEADER ─── -->
+  <header id="header">
+    <button class="header-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="header-breadcrumb">
+      <span>JDPanel</span>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current" id="breadcrumbCurrent">Dashboard</span>
+    </div>
+
+    <div class="header-spacer"></div>
+
+    <div class="header-search">
+      <i class="fas fa-magnifying-glass"></i>
+      <input type="text" placeholder="Search anything...">
+    </div>
+
+    <div class="header-btn-wrap">
+      <button class="header-btn" onclick="toggleNotifs()" title="Notifications">
+        <i class="fas fa-bell"></i>
+        <span class="badge-dot"></span>
+      </button>
+      <div class="notif-dropdown" id="notifDropdown">
+        <div class="notif-header">
+          <span class="notif-title">Notifications</span>
+          <span style="font-size:11px;font-weight:700;color:var(--accent);cursor:pointer">Mark all read</span>
+        </div>
+        <div class="notif-item"><div class="notif-dot"></div><div><div class="notif-text">SSL certificate for example.com expiring in 7 days</div><div class="notif-time">2 minutes ago</div></div></div>
+        <div class="notif-item"><div class="notif-dot"></div><div><div class="notif-text">Backup completed successfully</div><div class="notif-time">1 hour ago</div></div></div>
+        <div class="notif-item"><div class="notif-dot" style="background:#fbbf24"></div><div><div class="notif-text">High CPU usage detected (89%)</div><div class="notif-time">3 hours ago</div></div></div>
+        <div class="notif-item"><div class="notif-dot" style="background:#4ade80"></div><div><div class="notif-text">New hosting account created: user@test.com</div><div class="notif-time">5 hours ago</div></div></div>
+      </div>
+    </div>
+
+    <div class="header-divider"></div>
+
+    <button class="header-btn" onclick="openSettings()" title="Appearance Settings">
+      <i class="fas fa-palette"></i>
+    </button>
+
+    <div class="header-btn-wrap">
+      <button class="header-btn" onclick="toggleProfile()" title="Profile">
+        <i class="fas fa-circle-user"></i>
+      </button>
+      <div class="profile-dropdown" id="profileDropdown">
+        <div class="profile-menu-item"><i class="fas fa-user" style="width:16px"></i> My Profile</div>
+        <div class="profile-menu-item" onclick="openSettings()"><i class="fas fa-palette" style="width:16px"></i> Appearance</div>
+        <div class="profile-menu-item"><i class="fas fa-key" style="width:16px"></i> Change Password</div>
+        <div class="profile-menu-item"><i class="fas fa-shield" style="width:16px"></i> 2FA Security</div>
+        <div class="profile-menu-sep"></div>
+        <div class="profile-menu-item danger"><i class="fas fa-arrow-right-from-bracket" style="width:16px"></i> Sign Out</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── CONTENT ─── -->
+  <main id="content">
+
+    <!-- ════ DASHBOARD ════ -->
+    <div class="page-view active" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Server Dashboard</div>
+          <div class="page-subtitle">Welcome back, Super Admin — Last login: Today 08:42 AM</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm"><i class="fas fa-rotate"></i> Refresh</button>
+          <button class="btn btn-primary btn-sm"><i class="fas fa-download"></i> Export Report</button>
+        </div>
+      </div>
+
+      <!-- Alerts -->
+      <div class="alert alert-warning" style="margin-bottom:16px"><i class="fas fa-triangle-exclamation"></i> SSL certificate for <strong>example.com</strong> expires in 7 days. <a style="color:inherit;font-weight:800;margin-left:8px">Renew Now →</a></div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card" style="--stat-color:#3B82F6;--icon-bg:rgba(59,130,246,0.12);--icon-color:#60a5fa">
+          <div class="stat-icon"><i class="fas fa-globe"></i></div>
+          <div class="stat-value">1,247</div>
+          <div class="stat-label">Active Websites</div>
+          <div class="stat-trend trend-up"><i class="fas fa-arrow-trend-up"></i> +12 this week</div>
+        </div>
+        <div class="stat-card" style="--stat-color:#10B981;--icon-bg:rgba(16,185,129,0.12);--icon-color:#4ade80">
+          <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+          <div class="stat-value">4,821</div>
+          <div class="stat-label">Email Accounts</div>
+          <div class="stat-trend trend-up"><i class="fas fa-arrow-trend-up"></i> +38 this week</div>
+        </div>
+        <div class="stat-card" style="--stat-color:#8B5CF6;--icon-bg:rgba(139,92,246,0.12);--icon-color:#a78bfa">
+          <div class="stat-icon"><i class="fas fa-database"></i></div>
+          <div class="stat-value">892</div>
+          <div class="stat-label">Databases</div>
+          <div class="stat-trend trend-up"><i class="fas fa-arrow-trend-up"></i> +6 this week</div>
+        </div>
+        <div class="stat-card" style="--stat-color:#F59E0B;--icon-bg:rgba(245,158,11,0.12);--icon-color:#fbbf24">
+          <div class="stat-icon"><i class="fas fa-shield-halved"></i></div>
+          <div class="stat-value">98.3%</div>
+          <div class="stat-label">SSL Coverage</div>
+          <div class="stat-trend trend-down"><i class="fas fa-arrow-trend-down"></i> 14 need renewal</div>
+        </div>
+        <div class="stat-card" style="--stat-color:#EF4444;--icon-bg:rgba(239,68,68,0.12);--icon-color:#f87171">
+          <div class="stat-icon"><i class="fas fa-microchip"></i></div>
+          <div class="stat-value">34%</div>
+          <div class="stat-label">CPU Usage</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:34%;background:linear-gradient(90deg,#3B82F6,#60a5fa)"></div></div>
+        </div>
+        <div class="stat-card" style="--stat-color:#06B6D4;--icon-bg:rgba(6,182,212,0.12);--icon-color:#22d3ee">
+          <div class="stat-icon"><i class="fas fa-memory"></i></div>
+          <div class="stat-value">62%</div>
+          <div class="stat-label">RAM Usage</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:62%;background:linear-gradient(90deg,#06B6D4,#38bdf8)"></div></div>
+        </div>
+        <div class="stat-card" style="--stat-color:#EC4899;--icon-bg:rgba(236,72,153,0.12);--icon-color:#f472b6">
+          <div class="stat-icon"><i class="fas fa-hard-drive"></i></div>
+          <div class="stat-value">71%</div>
+          <div class="stat-label">Disk Usage</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:71%;background:linear-gradient(90deg,#EC4899,#f472b6)"></div></div>
+        </div>
+        <div class="stat-card" style="--stat-color:#4ade80;--icon-bg:rgba(74,222,128,0.12);--icon-color:#4ade80">
+          <div class="stat-icon"><i class="fas fa-clock"></i></div>
+          <div class="stat-value">99.97%</div>
+          <div class="stat-label">Uptime (30d)</div>
+          <div class="stat-trend trend-up"><i class="fas fa-circle-check"></i> All services running</div>
+        </div>
+      </div>
+
+      <!-- Services + Activity -->
+      <div class="grid-2" style="margin-bottom:24px">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-server" style="color:var(--accent);margin-right:8px"></i>Service Status</div>
+            <button class="btn btn-outline btn-sm">Manage</button>
+          </div>
+          <div class="card-body">
+            <div class="service-grid">
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Apache</div><div class="service-status">Running</div></div></div>
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">MySQL</div><div class="service-status">Running</div></div></div>
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Redis</div><div class="service-status">Running</div></div></div>
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Postfix</div><div class="service-status">Running</div></div></div>
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Dovecot</div><div class="service-status">Running</div></div></div>
+              <div class="service-card"><div class="service-dot dot-yellow"></div><div><div class="service-name">BIND9</div><div class="service-status">Warning</div></div></div>
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Pure-FTPd</div><div class="service-status">Running</div></div></div>
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Fail2Ban</div><div class="service-status">Active</div></div></div>
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Celery</div><div class="service-status">Running</div></div></div>
+              <div class="service-card"><div class="service-dot dot-red"></div><div><div class="service-name">SpamAssassin</div><div class="service-status">Stopped</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-clock-rotate-left" style="color:var(--accent);margin-right:8px"></i>Recent Activity</div>
+            <span style="font-size:11px;font-weight:700;color:var(--accent);cursor:pointer">View All</span>
+          </div>
+          <div class="card-body" style="padding-top:8px">
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa"><i class="fas fa-user-plus"></i></div>
+              <div><div class="activity-text">New account created: johndoe@example.com</div><div class="activity-time">2 min ago</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(74,222,128,0.12);color:#4ade80"><i class="fas fa-shield-halved"></i></div>
+              <div><div class="activity-text">SSL installed for shop.example.com</div><div class="activity-time">18 min ago</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(251,191,36,0.12);color:#fbbf24"><i class="fas fa-triangle-exclamation"></i></div>
+              <div><div class="activity-text">Fail2Ban blocked IP 192.168.1.45</div><div class="activity-time">1 hr ago</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(16,185,129,0.12);color:#4ade80"><i class="fas fa-cloud-arrow-up"></i></div>
+              <div><div class="activity-text">Backup completed — 2.3 GB archived</div><div class="activity-time">2 hr ago</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(139,92,246,0.12);color:#a78bfa"><i class="fas fa-database"></i></div>
+              <div><div class="activity-text">Database wp_prod created by admin</div><div class="activity-time">4 hr ago</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resource Usage -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-gauge-high" style="color:var(--accent);margin-right:8px"></i>Resource Usage</div>
+            <span class="badge badge-success"><i class="fas fa-circle" style="font-size:7px"></i> Normal</span>
+          </div>
+          <div class="card-body">
+            <div class="resource-row"><span class="resource-label">CPU</span><div class="resource-bar"><div class="resource-bar-fill" style="width:34%;background:linear-gradient(90deg,#3B82F6,#60a5fa)"></div></div><span class="resource-val">34%</span></div>
+            <div class="resource-row"><span class="resource-label">Memory</span><div class="resource-bar"><div class="resource-bar-fill" style="width:62%;background:linear-gradient(90deg,#8B5CF6,#a78bfa)"></div></div><span class="resource-val">62%</span></div>
+            <div class="resource-row"><span class="resource-label">Disk</span><div class="resource-bar"><div class="resource-bar-fill" style="width:71%;background:linear-gradient(90deg,#EC4899,#f472b6)"></div></div><span class="resource-val">71%</span></div>
+            <div class="resource-row"><span class="resource-label">Swap</span><div class="resource-bar"><div class="resource-bar-fill" style="width:12%;background:linear-gradient(90deg,#06B6D4,#38bdf8)"></div></div><span class="resource-val">12%</span></div>
+            <div class="resource-row"><span class="resource-label">Network ↑</span><div class="resource-bar"><div class="resource-bar-fill" style="width:28%;background:linear-gradient(90deg,#10B981,#4ade80)"></div></div><span class="resource-val">28%</span></div>
+            <div class="resource-row"><span class="resource-label">Network ↓</span><div class="resource-bar"><div class="resource-bar-fill" style="width:45%;background:linear-gradient(90deg,#F59E0B,#fbbf24)"></div></div><span class="resource-val">45%</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-server" style="color:var(--accent);margin-right:8px"></i>Server Information</div>
+          </div>
+          <div class="card-body">
+            <table style="font-size:13px">
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;width:140px;font-weight:700">Hostname</td><td style="border:none;font-weight:700">srv01.jdpanel.io</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">OS</td><td style="border:none;font-weight:700">Ubuntu 22.04 LTS</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">Kernel</td><td style="border:none;font-weight:700">6.5.0-25-generic</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">CPU</td><td style="border:none;font-weight:700">Intel Xeon E5-2680 × 8</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">RAM</td><td style="border:none;font-weight:700">32 GB DDR4</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">Storage</td><td style="border:none;font-weight:700">2 TB NVMe SSD</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">IP Address</td><td style="border:none;font-weight:700">45.33.32.156</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">Uptime</td><td style="border:none;font-weight:700">47 days, 12:34:22</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">Django</td><td style="border:none;font-weight:700">5.0.4</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">PHP</td><td style="border:none;font-weight:700">8.3.x</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ WEBSITES PAGE ════ -->
+    <div class="page-view" id="page-websites">
+      <div class="page-header">
+        <div><div class="page-title">Websites</div><div class="page-subtitle">Manage all hosted websites and domains</div></div>
+        <button class="btn btn-primary"><i class="fas fa-plus"></i> Add Website</button>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+        <input type="text" class="form-control" style="width:260px" placeholder="Search websites...">
+        <select class="form-control" style="width:160px"><option>All Status</option><option>Active</option><option>Suspended</option></select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Domain</th><th>Owner</th><th>PHP</th><th>Disk Used</th><th>SSL</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><strong>example.com</strong><br><small style="color:var(--text-muted)">/home/johndoe/public_html</small></td><td>johndoe</td><td><span class="badge badge-info">8.3</span></td><td>2.4 GB<div class="mini-bar"><div class="mini-fill" style="width:48%;background:#3B82F6"></div></div></td><td><span class="badge badge-success"><i class="fas fa-lock"></i> Active</span></td><td><span class="badge badge-success">Active</span></td><td style="white-space:nowrap"><button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> <button class="btn btn-outline btn-sm"><i class="fas fa-ban"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+            <tr><td><strong>shop.example.com</strong><br><small style="color:var(--text-muted)">/home/shopuser/public_html</small></td><td>shopuser</td><td><span class="badge badge-info">8.1</span></td><td>5.1 GB<div class="mini-bar"><div class="mini-fill" style="width:72%;background:#EC4899"></div></div></td><td><span class="badge badge-success"><i class="fas fa-lock"></i> Active</span></td><td><span class="badge badge-success">Active</span></td><td style="white-space:nowrap"><button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> <button class="btn btn-outline btn-sm"><i class="fas fa-ban"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+            <tr><td><strong>blog.site.net</strong></td><td>blogger99</td><td><span class="badge badge-info">7.4</span></td><td>800 MB<div class="mini-bar"><div class="mini-fill" style="width:16%;background:#10B981"></div></div></td><td><span class="badge badge-warning">Expiring</span></td><td><span class="badge badge-warning">Active</span></td><td style="white-space:nowrap"><button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> <button class="btn btn-outline btn-sm"><i class="fas fa-ban"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+            <tr><td><strong>oldsite.com</strong></td><td>testuser</td><td><span class="badge badge-info">8.2</span></td><td>1.2 GB<div class="mini-bar"><div class="mini-fill" style="width:24%;background:#8B5CF6"></div></div></td><td><span class="badge badge-danger">None</span></td><td><span class="badge badge-danger">Suspended</span></td><td style="white-space:nowrap"><button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> <button class="btn btn-outline btn-sm"><i class="fas fa-circle-play"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════ DATABASES PAGE ════ -->
+    <div class="page-view" id="page-databases">
+      <div class="page-header">
+        <div><div class="page-title">Database Management</div><div class="page-subtitle">MySQL / MariaDB databases and users</div></div>
+        <button class="btn btn-primary"><i class="fas fa-plus"></i> Create Database</button>
+      </div>
+      <div class="grid-2" style="margin-bottom:24px">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Create New Database</div></div>
+          <div class="card-body">
+            <div class="form-group"><label class="form-label">Database Name</label><input class="form-control" placeholder="e.g. wp_mysite"></div>
+            <div class="form-group"><label class="form-label">DB Username</label><input class="form-control" placeholder="e.g. wp_user"></div>
+            <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-control" placeholder="Strong password..."></div>
+            <button class="btn btn-primary" style="width:100%"><i class="fas fa-plus"></i> Create Database & User</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Database Stats</div></div>
+          <div class="card-body">
+            <div class="stats-grid" style="grid-template-columns:1fr 1fr;gap:12px">
+              <div class="stat-card" style="--stat-color:#3B82F6"><div class="stat-value">892</div><div class="stat-label">Total DBs</div></div>
+              <div class="stat-card" style="--stat-color:#10B981"><div class="stat-value">1,204</div><div class="stat-label">DB Users</div></div>
+              <div class="stat-card" style="--stat-color:#8B5CF6"><div class="stat-value">48.2 GB</div><div class="stat-label">Total Size</div></div>
+              <div class="stat-card" style="--stat-color:#F59E0B"><div class="stat-value">MariaDB</div><div class="stat-label">10.11.x</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Database Name</th><th>Owner</th><th>Size</th><th>Tables</th><th>Charset</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><strong>wp_example</strong></td><td>johndoe</td><td>245 MB</td><td>18</td><td>utf8mb4</td><td><button class="btn btn-outline btn-sm"><i class="fas fa-external-link-alt"></i> phpMyAdmin</button> <button class="btn btn-outline btn-sm"><i class="fas fa-download"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+            <tr><td><strong>shop_prod</strong></td><td>shopuser</td><td>1.2 GB</td><td>94</td><td>utf8mb4</td><td><button class="btn btn-outline btn-sm"><i class="fas fa-external-link-alt"></i> phpMyAdmin</button> <button class="btn btn-outline btn-sm"><i class="fas fa-download"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════ EMAIL PAGE ════ -->
+    <div class="page-view" id="page-email">
+      <div class="page-header">
+        <div><div class="page-title">Email Hosting</div><div class="page-subtitle">Postfix + Dovecot + Roundcube mail stack</div></div>
+        <button class="btn btn-primary"><i class="fas fa-plus"></i> Create Email Account</button>
+      </div>
+      <div class="stats-grid" style="margin-bottom:24px">
+        <div class="stat-card" style="--stat-color:#3B82F6"><div class="stat-icon"><i class="fas fa-envelope"></i></div><div class="stat-value">4,821</div><div class="stat-label">Email Accounts</div></div>
+        <div class="stat-card" style="--stat-color:#10B981"><div class="stat-icon"><i class="fas fa-paper-plane"></i></div><div class="stat-value">98.2%</div><div class="stat-label">Deliverability</div></div>
+        <div class="stat-card" style="--stat-color:#EF4444"><div class="stat-icon"><i class="fas fa-shield-virus"></i></div><div class="stat-value">1,240</div><div class="stat-label">Spam Blocked</div></div>
+        <div class="stat-card" style="--stat-color:#8B5CF6"><div class="stat-icon"><i class="fas fa-hdd"></i></div><div class="stat-value">12.4 GB</div><div class="stat-label">Mail Storage</div></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Email Address</th><th>Domain</th><th>Quota</th><th>Used</th><th>DKIM</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><strong>admin@example.com</strong></td><td>example.com</td><td>5 GB</td><td>1.2 GB<div class="mini-bar"><div class="mini-fill" style="width:24%;background:#3B82F6"></div></div></td><td><span class="badge badge-success">Active</span></td><td><span class="badge badge-success">Active</span></td><td><button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+            <tr><td><strong>info@shop.example.com</strong></td><td>shop.example.com</td><td>2 GB</td><td>800 MB<div class="mini-bar"><div class="mini-fill" style="width:40%;background:#EC4899"></div></div></td><td><span class="badge badge-warning">Pending</span></td><td><span class="badge badge-success">Active</span></td><td><button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════ DNS PAGE ════ -->
+    <div class="page-view" id="page-dns">
+      <div class="page-header">
+        <div><div class="page-title">DNS Management</div><div class="page-subtitle">BIND9 DNS zones and records</div></div>
+        <button class="btn btn-primary"><i class="fas fa-plus"></i> Add DNS Zone</button>
+      </div>
+      <div class="grid-2" style="margin-bottom:24px">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Add DNS Record</div></div>
+          <div class="card-body">
+            <div class="form-group"><label class="form-label">Zone / Domain</label><select class="form-control"><option>example.com</option><option>shop.example.com</option></select></div>
+            <div class="form-group"><label class="form-label">Record Type</label><select class="form-control"><option>A</option><option>MX</option><option>CNAME</option><option>TXT</option><option>NS</option><option>AAAA</option></select></div>
+            <div class="form-group"><label class="form-label">Name / Host</label><input class="form-control" placeholder="@, www, mail..."></div>
+            <div class="form-group"><label class="form-label">Value</label><input class="form-control" placeholder="IP or value..."></div>
+            <div class="form-group"><label class="form-label">TTL (seconds)</label><input class="form-control" value="3600"></div>
+            <button class="btn btn-primary" style="width:100%"><i class="fas fa-plus"></i> Add Record</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">DNS Propagation Checker</div></div>
+          <div class="card-body">
+            <div class="form-group"><label class="form-label">Domain to Check</label><input class="form-control" placeholder="example.com"></div>
+            <div class="form-group"><label class="form-label">Record Type</label><select class="form-control"><option>A</option><option>MX</option><option>TXT</option></select></div>
+            <button class="btn btn-primary" style="width:100%;margin-bottom:16px"><i class="fas fa-magnifying-glass"></i> Check Propagation</button>
+            <div class="alert alert-info"><i class="fas fa-circle-info"></i> Enter a domain above and click Check Propagation to see worldwide DNS status.</div>
+          </div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Type</th><th>Name</th><th>Value</th><th>TTL</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><span class="dns-type-badge badge badge-info">A</span></td><td>@</td><td>45.33.32.156</td><td>3600</td><td><button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+            <tr><td><span class="dns-type-badge badge badge-info">A</span></td><td>www</td><td>45.33.32.156</td><td>3600</td><td><button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+            <tr><td><span class="dns-type-badge" style="background:rgba(139,92,246,0.15);color:#a78bfa;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:800">MX</span></td><td>@</td><td>mail.example.com (Priority 10)</td><td>3600</td><td><button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+            <tr><td><span class="dns-type-badge" style="background:rgba(16,185,129,0.15);color:#4ade80;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:800">TXT</span></td><td>@</td><td>v=spf1 include:_spf.example.com ~all</td><td>3600</td><td><button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+            <tr><td><span class="dns-type-badge" style="background:rgba(245,158,11,0.15);color:#fbbf24;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:800">CNAME</span></td><td>mail</td><td>example.com</td><td>3600</td><td><button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════ SSL PAGE ════ -->
+    <div class="page-view" id="page-ssl">
+      <div class="page-header">
+        <div><div class="page-title">SSL Certificates</div><div class="page-subtitle">Let's Encrypt + Custom SSL management</div></div>
+        <button class="btn btn-primary"><i class="fas fa-plus"></i> Install SSL</button>
+      </div>
+      <div class="stats-grid" style="margin-bottom:24px">
+        <div class="stat-card" style="--stat-color:#10B981"><div class="stat-icon"><i class="fas fa-lock"></i></div><div class="stat-value">1,218</div><div class="stat-label">Active SSL</div></div>
+        <div class="stat-card" style="--stat-color:#F59E0B"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-value">14</div><div class="stat-label">Expiring Soon</div></div>
+        <div class="stat-card" style="--stat-color:#EF4444"><div class="stat-icon"><i class="fas fa-lock-open"></i></div><div class="stat-value">29</div><div class="stat-label">No SSL</div></div>
+        <div class="stat-card" style="--stat-color:#3B82F6"><div class="stat-icon"><i class="fas fa-rotate"></i></div><div class="stat-value">Auto</div><div class="stat-label">Renewal On</div></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Domain</th><th>Issuer</th><th>Issued</th><th>Expires</th><th>Auto-Renew</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><strong>example.com</strong></td><td>Let's Encrypt</td><td>2024-01-15</td><td>2025-07-18</td><td><span class="badge badge-success">On</span></td><td><span class="badge badge-success"><i class="fas fa-lock"></i> Valid</span></td><td><button class="btn btn-outline btn-sm"><i class="fas fa-rotate"></i> Renew</button></td></tr>
+            <tr><td><strong>shop.example.com</strong></td><td>Let's Encrypt</td><td>2024-02-10</td><td>2025-05-27</td><td><span class="badge badge-success">On</span></td><td><span class="badge badge-warning">Expiring</span></td><td><button class="btn btn-primary btn-sm"><i class="fas fa-rotate"></i> Renew Now</button></td></tr>
+            <tr><td><strong>blog.site.net</strong></td><td>Custom CA</td><td>2023-12-01</td><td>2024-12-01</td><td><span class="badge badge-danger">Off</span></td><td><span class="badge badge-danger">Expired</span></td><td><button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Re-Install</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════ SECURITY PAGE ════ -->
+    <div class="page-view" id="page-security">
+      <div class="page-header">
+        <div><div class="page-title">Security Center</div><div class="page-subtitle">Firewall, Fail2Ban, Malware Scanner, ModSecurity</div></div>
+        <span class="badge badge-success" style="font-size:13px;padding:8px 16px"><i class="fas fa-shield-halved"></i> Server Protected</span>
+      </div>
+      <div class="stats-grid" style="margin-bottom:24px">
+        <div class="stat-card" style="--stat-color:#EF4444"><div class="stat-icon"><i class="fas fa-ban"></i></div><div class="stat-value">2,847</div><div class="stat-label">IPs Blocked</div></div>
+        <div class="stat-card" style="--stat-color:#F59E0B"><div class="stat-icon"><i class="fas fa-triangle-exclamation"></i></div><div class="stat-value">142</div><div class="stat-label">Failed Logins</div></div>
+        <div class="stat-card" style="--stat-color:#10B981"><div class="stat-icon"><i class="fas fa-shield-virus"></i></div><div class="stat-value">0</div><div class="stat-label">Malware Found</div></div>
+        <div class="stat-card" style="--stat-color:#3B82F6"><div class="stat-icon"><i class="fas fa-fire-flame-curved"></i></div><div class="stat-value">UFW</div><div class="stat-label">Firewall Active</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title"><i class="fas fa-fire-flame-curved" style="color:var(--accent);margin-right:8px"></i>Firewall Rules</div><button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Rule</button></div>
+          <div class="card-body">
+            <table style="font-size:13px">
+              <thead><tr><th>Port</th><th>Protocol</th><th>Action</th><th>Description</th><th></th></tr></thead>
+              <tbody>
+                <tr><td>22</td><td>TCP</td><td><span class="badge badge-success">ALLOW</span></td><td>SSH</td><td><button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+                <tr><td>80</td><td>TCP</td><td><span class="badge badge-success">ALLOW</span></td><td>HTTP</td><td><button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+                <tr><td>443</td><td>TCP</td><td><span class="badge badge-success">ALLOW</span></td><td>HTTPS</td><td><button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+                <tr><td>25</td><td>TCP</td><td><span class="badge badge-success">ALLOW</span></td><td>SMTP</td><td><button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+                <tr><td>3306</td><td>TCP</td><td><span class="badge badge-danger">DENY</span></td><td>MySQL (Remote)</td><td><button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title"><i class="fas fa-terminal" style="color:var(--accent);margin-right:8px"></i>Fail2Ban Log</div></div>
+          <div class="card-body" style="padding:0">
+            <div class="log-terminal">
+              <div class="log-line"><span class="log-time">[2025-05-20 09:12]</span> <span class="log-ok">[f2b]</span> Ban 192.168.1.45 for sshd after 5 failures</div>
+              <div class="log-line"><span class="log-time">[2025-05-20 09:08]</span> <span class="log-warn">[f2b]</span> Warning: 4 failures from 10.0.0.22</div>
+              <div class="log-line"><span class="log-time">[2025-05-20 08:55]</span> <span class="log-ok">[f2b]</span> Unban 203.0.113.10 (timeout)</div>
+              <div class="log-line"><span class="log-time">[2025-05-20 08:30]</span> <span class="log-err">[f2b]</span> Ban 198.51.100.5 for apache-auth</div>
+              <div class="log-line"><span class="log-time">[2025-05-20 07:15]</span> <span class="log-info">[f2b]</span> Service started successfully</div>
+              <div class="log-line"><span class="log-time">[2025-05-19 22:44]</span> <span class="log-ok">[f2b]</span> Ban 172.16.0.33 for postfix</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ BACKUPS PAGE ════ -->
+    <div class="page-view" id="page-backups">
+      <div class="page-header">
+        <div><div class="page-title">Backup Manager</div><div class="page-subtitle">Scheduled backups to local, S3, Google Drive, FTP</div></div>
+        <button class="btn btn-primary"><i class="fas fa-play"></i> Run Backup Now</button>
+      </div>
+      <div class="stats-grid" style="margin-bottom:24px">
+        <div class="stat-card" style="--stat-color:#3B82F6"><div class="stat-icon"><i class="fas fa-folder-open"></i></div><div class="stat-value">48</div><div class="stat-label">Total Backups</div></div>
+        <div class="stat-card" style="--stat-color:#10B981"><div class="stat-icon"><i class="fas fa-hard-drive"></i></div><div class="stat-value">186 GB</div><div class="stat-label">Backup Size</div></div>
+        <div class="stat-card" style="--stat-color:#8B5CF6"><div class="stat-icon"><i class="fas fa-calendar-check"></i></div><div class="stat-value">Daily</div><div class="stat-label">Schedule</div></div>
+        <div class="stat-card" style="--stat-color:#10B981"><div class="stat-icon"><i class="fas fa-circle-check"></i></div><div class="stat-value">100%</div><div class="stat-label">Success Rate</div></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Backup Name</th><th>Type</th><th>Size</th><th>Destination</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><strong>full_backup_20250520</strong></td><td><span class="badge badge-info">Full</span></td><td>4.2 GB</td><td><i class="fas fa-server" style="color:var(--text-muted)"></i> Local</td><td>2025-05-20 02:00</td><td><span class="badge badge-success">Complete</span></td><td><button class="btn btn-outline btn-sm"><i class="fas fa-rotate-left"></i> Restore</button> <button class="btn btn-outline btn-sm"><i class="fas fa-download"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+            <tr><td><strong>incr_backup_20250519</strong></td><td><span class="badge badge-warning">Incremental</span></td><td>340 MB</td><td><i class="fab fa-aws" style="color:#FF9900"></i> Amazon S3</td><td>2025-05-19 02:00</td><td><span class="badge badge-success">Complete</span></td><td><button class="btn btn-outline btn-sm"><i class="fas fa-rotate-left"></i> Restore</button> <button class="btn btn-outline btn-sm"><i class="fas fa-download"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════ FILE MANAGER PAGE ════ -->
+    <div class="page-view" id="page-filemanager">
+      <div class="page-header">
+        <div><div class="page-title">File Manager</div><div class="page-subtitle">/home/johndoe/public_html</div></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm"><i class="fas fa-folder-plus"></i> New Folder</button>
+          <button class="btn btn-primary btn-sm"><i class="fas fa-upload"></i> Upload Files</button>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-body" style="padding:12px 16px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-outline btn-sm"><i class="fas fa-arrow-left"></i></button>
+            <button class="btn btn-outline btn-sm"><i class="fas fa-arrow-up"></i></button>
+            <button class="btn btn-outline btn-sm"><i class="fas fa-house"></i></button>
+            <div style="flex:1;background:var(--input-bg);border:1px solid var(--input-border);border-radius:var(--radius-sm);padding:6px 12px;font-size:13px;font-weight:600;color:var(--text-secondary);font-family:monospace">/home/johndoe/public_html</div>
+            <button class="btn btn-outline btn-sm"><i class="fas fa-magnifying-glass"></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="width:30px"><input type="checkbox"></th><th>Name</th><th>Size</th><th>Permissions</th><th>Modified</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><input type="checkbox"></td><td><i class="fas fa-folder" style="color:#fbbf24;margin-right:8px"></i><strong>wp-content</strong></td><td>—</td><td>rwxr-xr-x</td><td>2025-05-18</td><td><button class="btn btn-outline btn-sm">Open</button></td></tr>
+            <tr><td><input type="checkbox"></td><td><i class="fas fa-folder" style="color:#fbbf24;margin-right:8px"></i><strong>wp-includes</strong></td><td>—</td><td>rwxr-xr-x</td><td>2025-05-18</td><td><button class="btn btn-outline btn-sm">Open</button></td></tr>
+            <tr><td><input type="checkbox"></td><td><i class="fas fa-file-code" style="color:#60a5fa;margin-right:8px"></i>wp-config.php</td><td>3.2 KB</td><td>rw-r--r--</td><td>2025-05-01</td><td><button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> <button class="btn btn-outline btn-sm"><i class="fas fa-download"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+            <tr><td><input type="checkbox"></td><td><i class="fas fa-file-code" style="color:#60a5fa;margin-right:8px"></i>index.php</td><td>420 B</td><td>rw-r--r--</td><td>2025-04-22</td><td><button class="btn btn-outline btn-sm"><i class="fas fa-pen"></i></button> <button class="btn btn-outline btn-sm"><i class="fas fa-download"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+            <tr><td><input type="checkbox"></td><td><i class="fas fa-file-archive" style="color:#fbbf24;margin-right:8px"></i>backup.zip</td><td>2.4 GB</td><td>rw-r--r--</td><td>2025-05-20</td><td><button class="btn btn-outline btn-sm"><i class="fas fa-file-zipper"></i> Extract</button> <button class="btn btn-outline btn-sm"><i class="fas fa-download"></i></button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════ FTP PAGE ════ -->
+    <div class="page-view" id="page-ftp">
+      <div class="page-header">
+        <div><div class="page-title">FTP Accounts</div><div class="page-subtitle">Manage FTP / SFTP access</div></div>
+        <button class="btn btn-primary"><i class="fas fa-plus"></i> Create FTP Account</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Username</th><th>Directory</th><th>Quota</th><th>Last Login</th><th>Type</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><strong>johndoe_ftp</strong></td><td>/home/johndoe/public_html</td><td>Unlimited</td><td>2025-05-19</td><td><span class="badge badge-info">SFTP</span></td><td><button class="btn btn-outline btn-sm"><i class="fas fa-key"></i> Change Pass</button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+            <tr><td><strong>shopuser_ftp</strong></td><td>/home/shopuser/public_html</td><td>5 GB</td><td>2025-05-17</td><td><span class="badge badge-warning">FTP</span></td><td><button class="btn btn-outline btn-sm"><i class="fas fa-key"></i> Change Pass</button> <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════ API PAGE ════ -->
+    <div class="page-view" id="page-api">
+      <div class="page-header">
+        <div><div class="page-title">API & Webhooks</div><div class="page-subtitle">Django REST Framework — API token management</div></div>
+        <button class="btn btn-primary"><i class="fas fa-plus"></i> Generate Token</button>
+      </div>
+      <div class="grid-2" style="margin-bottom:24px">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Your API Token</div></div>
+          <div class="card-body">
+            <div class="alert alert-warning"><i class="fas fa-triangle-exclamation"></i> Keep this token secret. Do not share it publicly.</div>
+            <div class="form-group"><label class="form-label">API Token</label>
+              <div style="display:flex;gap:8px">
+                <input class="form-control" style="font-family:monospace;font-size:12px" value="jdp_tok_a7f8b2c1d3e4f5a6b7c8d9e0f1a2b3c4" readonly>
+                <button class="btn btn-outline" style="flex-shrink:0"><i class="fas fa-copy"></i></button>
+              </div>
+            </div>
+            <div class="form-group"><label class="form-label">API Base URL</label>
+              <input class="form-control" style="font-family:monospace;font-size:12px" value="https://jdpanel.yourdomain.com/api/v1/" readonly>
+            </div>
+            <button class="btn btn-danger btn-sm"><i class="fas fa-rotate"></i> Regenerate Token</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">API Endpoints</div></div>
+          <div class="card-body" style="padding:0">
+            <div class="log-terminal" style="max-height:300px">
+              <div class="log-line"><span class="log-ok">GET</span>    /api/v1/websites/</div>
+              <div class="log-line"><span class="log-ok">POST</span>   /api/v1/websites/create/</div>
+              <div class="log-line"><span class="log-warn">DELETE</span> /api/v1/websites/{id}/</div>
+              <div class="log-line"><span class="log-ok">GET</span>    /api/v1/databases/</div>
+              <div class="log-line"><span class="log-ok">POST</span>   /api/v1/databases/create/</div>
+              <div class="log-line"><span class="log-ok">GET</span>    /api/v1/emails/</div>
+              <div class="log-line"><span class="log-ok">POST</span>   /api/v1/ssl/install/</div>
+              <div class="log-line"><span class="log-ok">GET</span>    /api/v1/dns/zones/</div>
+              <div class="log-line"><span class="log-ok">POST</span>   /api/v1/backups/run/</div>
+              <div class="log-line"><span class="log-ok">GET</span>    /api/v1/resources/usage/</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SETTINGS PAGE ════ -->
+    <div class="page-view" id="page-settings-page">
+      <div class="page-header">
+        <div><div class="page-title">Panel Settings</div><div class="page-subtitle">System configuration and preferences</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title"><i class="fas fa-gear" style="color:var(--accent);margin-right:8px"></i>General Settings</div></div>
+          <div class="card-body">
+            <div class="form-group"><label class="form-label">Panel Name</label><input class="form-control" value="JDPanel"></div>
+            <div class="form-group"><label class="form-label">Admin Email</label><input class="form-control" value="admin@jdpanel.io"></div>
+            <div class="form-group"><label class="form-label">Default PHP Version</label><select class="form-control"><option>8.3</option><option>8.2</option><option>8.1</option><option>7.4</option></select></div>
+            <div class="form-group"><label class="form-label">Timezone</label><select class="form-control"><option>UTC</option><option>Africa/Dar_es_Salaam</option><option>America/New_York</option></select></div>
+            <button class="btn btn-primary">Save Settings</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title"><i class="fas fa-shield" style="color:var(--accent);margin-right:8px"></i>Security Settings</div></div>
+          <div class="card-body">
+            <div class="toggle-row"><div class="toggle-info"><div class="toggle-name">Two-Factor Authentication</div><div class="toggle-desc">Require 2FA for all admin logins</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="toggle-row"><div class="toggle-info"><div class="toggle-name">Brute Force Protection</div><div class="toggle-desc">Lock accounts after failed attempts</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="toggle-row"><div class="toggle-info"><div class="toggle-name">CAPTCHA on Login</div><div class="toggle-desc">Show CAPTCHA for login forms</div></div><div class="toggle-switch" onclick="this.classList.toggle('on')"></div></div>
+            <div class="toggle-row"><div class="toggle-info"><div class="toggle-name">Auto SSL Renewal</div><div class="toggle-desc">Renew Let's Encrypt certs automatically</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div>
+            <div class="toggle-row"><div class="toggle-info"><div class="toggle-name">HTTPS Redirect</div><div class="toggle-desc">Force HTTPS on all websites</div></div><div class="toggle-switch on" onclick="this.classList.toggle('on')"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ GENERIC FALLBACK ════ -->
+    <div class="page-view" id="page-generic">
+      <div class="page-header"><div><div class="page-title" id="genericTitle">Module</div><div class="page-subtitle" id="genericSubtitle">Coming soon or in development</div></div></div>
+      <div class="alert alert-info"><i class="fas fa-circle-info"></i> This module is available in the full JDPanel implementation. Select a menu item to explore more sections.</div>
+    </div>
+
+  </main>
+
+  <!-- ─── FOOTER ─── -->
+  <footer id="footer">
+    <div class="footer-text">JDPanel v1.0.0 — Professional Linux Hosting Control Panel</div>
+    <div class="footer-status"><span style="width:7px;height:7px;background:#4ade80;border-radius:50%;box-shadow:0 0 6px rgba(74,222,128,0.5);display:inline-block"></span> All Systems Operational</div>
+    <div class="footer-links">
+      <a class="footer-link" href="#">Documentation</a>
+      <a class="footer-link" href="#">Support</a>
+      <a class="footer-link" href="#">API</a>
+      <a class="footer-link" href="#">Changelog</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+// ─── NAVIGATION ───
+const pageNames = {
+  'dashboard':'Dashboard','websites':'Websites','domains':'Domains',
+  'subdomains':'Subdomains','parked':'Parked Domains','redirects':'Redirects',
+  'filemanager':'File Manager','databases':'Databases','db-users':'DB Users',
+  'phpmyadmin':'phpMyAdmin','email':'Email Hosting','webmail':'Webmail',
+  'forwarders':'Email Forwarders','autoresponders':'Auto Responders',
+  'spam':'Spam Filters','dkim':'DKIM / SPF','dns':'DNS Zones',
+  'dns-records':'DNS Records','dns-propagation':'Propagation Check',
+  'ssl':'SSL Certificates','ssl-install':'Auto Install SSL','ssl-custom':'Custom SSL',
+  'ftp':'FTP Accounts','ftp-logs':'FTP Logs','security':'Security Center',
+  'fail2ban':'Fail2Ban','malware':'Malware Scanner','ip-block':'IP Blocking',
+  'modsecurity':'ModSecurity','backups':'Backup Manager','backup-schedule':'Schedules',
+  'backup-restore':'Restore Backups','backup-remote':'Remote Storage',
+  'packages':'Hosting Packages','resellers':'Reseller Accounts','users':'Hosting Users',
+  'billing':'Invoices','subscriptions':'Subscriptions','payments':'Payment Gateway',
+  'api':'API & Webhooks','notifications':'Notifications','settings-page':'Panel Settings',
+  'server-info':'Server Info','services':'Service Control','cron':'Cron Jobs',
+  'logs':'System Logs','packages-update':'Package Updates','resources':'Resource Monitor',
+  'network':'Network Traffic','processes':'Process Viewer'
+};
+
+const explicitPages = ['dashboard','websites','databases','email','dns','ssl','security','backups','filemanager','ftp','api','settings-page'];
+
+function navigate(page, el) {
+  // Update breadcrumb
+  document.getElementById('breadcrumbCurrent').textContent = pageNames[page] || page;
+  // Hide all pages
+  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  // Show target or generic
+  const target = document.getElementById('page-' + page);
+  if (target) {
+    target.classList.add('active');
+  } else {
+    document.getElementById('genericTitle').textContent = pageNames[page] || page;
+    document.getElementById('genericSubtitle').textContent = 'Module: ' + (pageNames[page] || page);
+    document.getElementById('page-generic').classList.add('active');
+  }
+  // Update active nav links
+  document.querySelectorAll('.nav-link, .sub-link').forEach(l => l.classList.remove('active'));
+  if (el) el.classList.add('active');
+  // Close mobile
+  closeMobileSidebar();
+  // Close dropdowns
+  closeDropdowns();
+}
+
+function toggleMenu(id) {
+  const item = document.getElementById(id);
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.nav-item.open').forEach(i => { if(i.id !== id) i.classList.remove('open'); });
+  item.classList.toggle('open', !isOpen);
+  // Mark link active on parent
+  item.querySelector('.nav-link').classList.toggle('active', !isOpen);
+}
+
+// ─── SIDEBAR TOGGLE ───
+let sidebarCollapsed = false;
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const wrapper = document.getElementById('main-wrapper');
+  if (window.innerWidth <= 768) {
+    sidebar.classList.toggle('mobile-open');
+    document.getElementById('mobile-overlay').classList.toggle('show', sidebar.classList.contains('mobile-open'));
+  } else {
+    sidebarCollapsed = !sidebarCollapsed;
+    sidebar.classList.toggle('collapsed', sidebarCollapsed);
+    wrapper.classList.toggle('collapsed', sidebarCollapsed);
+    document.getElementById('toggleCompact').classList.toggle('on', sidebarCollapsed);
+  }
+}
+function closeMobileSidebar() {
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('mobile-overlay').classList.remove('show');
+}
+
+// ─── SETTINGS PANEL ───
+function openSettings() {
+  document.getElementById('settings-panel').classList.add('open');
+  document.getElementById('settingsOverlay').classList.add('show');
+  closeDropdowns();
+}
+function closeSettings() {
+  document.getElementById('settings-panel').classList.remove('open');
+  document.getElementById('settingsOverlay').classList.remove('show');
+}
+
+// ─── THEME ───
+function setTheme(theme) {
+  document.querySelectorAll('.theme-opt').forEach(o => o.classList.remove('active'));
+  if(theme === 'light') {
+    document.documentElement.setAttribute('data-theme','light');
+    document.getElementById('themeLight').classList.add('active');
+  } else if(theme === 'dark') {
+    document.documentElement.setAttribute('data-theme','dark');
+    document.getElementById('themeDark').classList.add('active');
+  } else {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    document.getElementById('themeAuto').classList.add('active');
+  }
+}
+
+// ─── ACCENT COLOR ───
+function setAccent(color, hover, el) {
+  document.documentElement.style.setProperty('--accent', color);
+  document.documentElement.style.setProperty('--accent-hover', hover);
+  document.documentElement.style.setProperty('--accent-light', hexToRgba(color, 0.12));
+  document.querySelectorAll('#accentSwatches .swatch').forEach(s => s.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('accentCustom').value = color;
+  document.getElementById('accentHex').value = color;
+}
+function setAccentCustom(val) {
+  document.documentElement.style.setProperty('--accent', val);
+  document.documentElement.style.setProperty('--accent-light', hexToRgba(val, 0.12));
+  document.getElementById('accentHex').value = val;
+  document.querySelectorAll('#accentSwatches .swatch').forEach(s => s.classList.remove('active'));
+}
+function setAccentHexInput(val) {
+  if(/^#[0-9A-Fa-f]{6}$/.test(val)) {
+    document.documentElement.style.setProperty('--accent', val);
+    document.documentElement.style.setProperty('--accent-light', hexToRgba(val, 0.12));
+    document.getElementById('accentCustom').value = val;
+  }
+}
+
+// ─── SIDEBAR BG ───
+function setSidebarBg(color, el) {
+  document.documentElement.style.setProperty('--sidebar-bg', color);
+  document.documentElement.style.setProperty('--header-bg', color);
+  document.querySelectorAll('#sidebarSwatches .swatch').forEach(s => s.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('sidebarCustom').value = color;
+  document.getElementById('sidebarHex').value = color;
+}
+function setSidebarBgCustom(val) {
+  document.documentElement.style.setProperty('--sidebar-bg', val);
+  document.getElementById('sidebarHex').value = val;
+  document.querySelectorAll('#sidebarSwatches .swatch').forEach(s => s.classList.remove('active'));
+}
+
+// ─── HEADER BG ───
+function setHeaderBg(color, el) {
+  document.documentElement.style.setProperty('--header-bg', color);
+  document.querySelectorAll('#headerSwatches .swatch').forEach(s => s.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('headerCustom').value = color;
+}
+function setHeaderBgCustom(val) {
+  document.documentElement.style.setProperty('--header-bg', val);
+  document.querySelectorAll('#headerSwatches .swatch').forEach(s => s.classList.remove('active'));
+}
+
+// ─── FOOTER BG ───
+function setFooterBg(color, el) {
+  document.documentElement.style.setProperty('--footer-bg', color);
+  document.querySelectorAll('#footerSwatches .swatch').forEach(s => s.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('footerCustom').value = color;
+}
+function setFooterBgCustom(val) {
+  document.documentElement.style.setProperty('--footer-bg', val);
+  document.querySelectorAll('#footerSwatches .swatch').forEach(s => s.classList.remove('active'));
+}
+
+// ─── SIDEBAR WIDTH ───
+function setSidebarWidth(val) {
+  document.documentElement.style.setProperty('--sidebar-width', val + 'px');
+}
+
+// ─── ANIMATION SPEED ───
+function setAnimSpeed(speed, el) {
+  document.querySelectorAll('.settings-section .theme-opt').forEach(o => { if(o.textContent.match(/Fast|Normal|Slow|None/)) o.classList.remove('active'); });
+  if(el) el.classList.add('active');
+  document.body.classList.remove('anim-fast','anim-slow','anim-none');
+  if(speed === 'fast') document.body.classList.add('anim-fast');
+  else if(speed === 'slow') document.body.classList.add('anim-slow');
+  else if(speed === 'none') document.body.classList.add('anim-none');
+}
+
+// ─── COMPACT SIDEBAR ───
+function toggleCompactSidebar(el) {
+  el.classList.toggle('on');
+  const sidebar = document.getElementById('sidebar');
+  const wrapper = document.getElementById('main-wrapper');
+  sidebarCollapsed = el.classList.contains('on');
+  sidebar.classList.toggle('collapsed', sidebarCollapsed);
+  wrapper.classList.toggle('collapsed', sidebarCollapsed);
+}
+
+// ─── FOOTER VISIBILITY ───
+function toggleFooterVis(el) {
+  el.classList.toggle('on');
+  document.getElementById('footer').style.display = el.classList.contains('on') ? '' : 'none';
+}
+
+// ─── RESET ───
+function resetSettings() {
+  document.documentElement.removeAttribute('style');
+  setTheme('dark');
+  document.getElementById('accentCustom').value = '#3B82F6';
+  document.getElementById('accentHex').value = '#3B82F6';
+  document.getElementById('sidebarCustom').value = '#0f172a';
+  document.getElementById('sidebarHex').value = '#0f172a';
+  document.getElementById('headerCustom').value = '#0f172a';
+  document.getElementById('footerCustom').value = '#0f172a';
+  document.body.classList.remove('anim-fast','anim-slow','anim-none');
+}
+
+// ─── DROPDOWNS ───
+function toggleNotifs() {
+  const d = document.getElementById('notifDropdown');
+  const p = document.getElementById('profileDropdown');
+  p.classList.remove('show');
+  d.classList.toggle('show');
+}
+function toggleProfile() {
+  const d = document.getElementById('profileDropdown');
+  const n = document.getElementById('notifDropdown');
+  n.classList.remove('show');
+  d.classList.toggle('show');
+}
+function closeDropdowns() {
+  document.getElementById('notifDropdown').classList.remove('show');
+  document.getElementById('profileDropdown').classList.remove('show');
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.header-btn-wrap') && !e.target.closest('.notif-dropdown') && !e.target.closest('.profile-dropdown')) {
+    closeDropdowns();
+  }
+});
+
+// ─── UTILITY ───
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+// Auto-open first submenu (server)
+document.getElementById('nav-server').classList.add('open');
+
+// Animate progress bars on load
+window.addEventListener('load', () => {
+  document.querySelectorAll('.resource-bar-fill, .progress-fill, .mini-fill').forEach(el => {
+    const w = el.style.width;
+    el.style.width = '0';
+    setTimeout(() => { el.style.width = w; }, 200);
+  });
+});
+</script>
+</body>
+</html>

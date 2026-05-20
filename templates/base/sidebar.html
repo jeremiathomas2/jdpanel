@@ -1,0 +1,251 @@
+<!-- ─── SIDEBAR ─── -->
+<aside id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">JD</div>
+    <div class="logo-text">JD<span>Panel</span></div>
+  </div>
+
+  <nav class="sidebar-nav" id="sidebarNav">
+    <!-- MAIN -->
+    <div class="sidebar-section-label">Main</div>
+
+    <div class="nav-item">
+      <a href="{% url 'dashboard:index' %}" class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+        <div class="nav-icon"><i class="fas fa-th-large"></i></div>
+        <span class="nav-label">Dashboard</span>
+        <div class="nav-tooltip">Dashboard</div>
+      </a>
+    </div>
+
+    <!-- SERVER -->
+    <div class="sidebar-section-label">Server</div>
+
+    <div class="nav-item" id="nav-server">
+      <div class="nav-link" onclick="toggleMenu('nav-server')">
+        <div class="nav-icon"><i class="fas fa-server"></i></div>
+        <span class="nav-label">Server Management</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Server</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('server-info',this)"><div class="sub-dot"></div>Server Info</div>
+        <div class="sub-link" onclick="navigate('services',this)"><div class="sub-dot"></div>Services Control</div>
+        <div class="sub-link" onclick="navigate('cron',this)"><div class="sub-dot"></div>Cron Jobs</div>
+        <div class="sub-link" onclick="navigate('logs',this)"><div class="sub-dot"></div>System Logs</div>
+        <div class="sub-link" onclick="navigate('packages-update',this)"><div class="sub-dot"></div>Package Updates</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-monitor">
+      <div class="nav-link" onclick="toggleMenu('nav-monitor')">
+        <div class="nav-icon"><i class="fas fa-chart-area"></i></div>
+        <span class="nav-label">Resource Monitor</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Monitor</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('resources',this)"><div class="sub-dot"></div>CPU / RAM / Disk</div>
+        <div class="sub-link" onclick="navigate('network',this)"><div class="sub-dot"></div>Network Traffic</div>
+        <div class="sub-link" onclick="navigate('processes',this)"><div class="sub-dot"></div>Process Viewer</div>
+      </div>
+    </div>
+
+    <!-- HOSTING -->
+    <div class="sidebar-section-label">Hosting</div>
+
+    <div class="nav-item" id="nav-websites">
+      <div class="nav-link" onclick="toggleMenu('nav-websites')">
+        <div class="nav-icon"><i class="fas fa-globe"></i></div>
+        <span class="nav-label">Websites</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Websites</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('websites',this)"><div class="sub-dot"></div>All Websites</div>
+        <div class="sub-link" onclick="navigate('domains',this)"><div class="sub-dot"></div>Domains</div>
+        <div class="sub-link" onclick="navigate('subdomains',this)"><div class="sub-dot"></div>Subdomains</div>
+        <div class="sub-link" onclick="navigate('parked',this)"><div class="sub-dot"></div>Parked Domains</div>
+        <div class="sub-link" onclick="navigate('redirects',this)"><div class="sub-dot"></div>Redirects</div>
+      </div>
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-link" onclick="navigate('filemanager',this)">
+        <div class="nav-icon"><i class="fas fa-folder-open"></i></div>
+        <span class="nav-label">File Manager</span>
+        <div class="nav-tooltip">Files</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-db">
+      <div class="nav-link" onclick="toggleMenu('nav-db')">
+        <div class="nav-icon"><i class="fas fa-database"></i></div>
+        <span class="nav-label">Databases</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Databases</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('databases',this)"><div class="sub-dot"></div>MySQL / MariaDB</div>
+        <div class="sub-link" onclick="navigate('db-users',this)"><div class="sub-dot"></div>DB Users</div>
+        <div class="sub-link" onclick="navigate('phpmyadmin',this)"><div class="sub-dot"></div>phpMyAdmin</div>
+      </div>
+    </div>
+
+    <!-- SERVICES -->
+    <div class="sidebar-section-label">Services</div>
+
+    <div class="nav-item" id="nav-email">
+      <div class="nav-link" onclick="toggleMenu('nav-email')">
+        <div class="nav-icon"><i class="fas fa-envelope"></i></div>
+        <span class="nav-label">Email Hosting</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Email</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('email',this)"><div class="sub-dot"></div>Email Accounts</div>
+        <div class="sub-link" onclick="navigate('webmail',this)"><div class="sub-dot"></div>Webmail</div>
+        <div class="sub-link" onclick="navigate('forwarders',this)"><div class="sub-dot"></div>Forwarders</div>
+        <div class="sub-link" onclick="navigate('autoresponders',this)"><div class="sub-dot"></div>Auto Responders</div>
+        <div class="sub-link" onclick="navigate('spam',this)"><div class="sub-dot"></div>Spam Filters</div>
+        <div class="sub-link" onclick="navigate('dkim',this)"><div class="sub-dot"></div>DKIM / SPF</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-dns">
+      <div class="nav-link" onclick="toggleMenu('nav-dns')">
+        <div class="nav-icon"><i class="fas fa-network-wired"></i></div>
+        <span class="nav-label">DNS Management</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">DNS</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('dns',this)"><div class="sub-dot"></div>DNS Zones</div>
+        <div class="sub-link" onclick="navigate('dns-records',this)"><div class="sub-dot"></div>DNS Records</div>
+        <div class="sub-link" onclick="navigate('dns-propagation',this)"><div class="sub-dot"></div>Propagation Check</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-ssl">
+      <div class="nav-link" onclick="toggleMenu('nav-ssl')">
+        <div class="nav-icon"><i class="fas fa-shield-halved"></i></div>
+        <span class="nav-label">SSL / HTTPS</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">SSL</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('ssl',this)"><div class="sub-dot"></div>SSL Certificates</div>
+        <div class="sub-link" onclick="navigate('ssl-install',this)"><div class="sub-dot"></div>Auto Install SSL</div>
+        <div class="sub-link" onclick="navigate('ssl-custom',this)"><div class="sub-dot"></div>Custom SSL Upload</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-ftp">
+      <div class="nav-link" onclick="toggleMenu('nav-ftp')">
+        <div class="nav-icon"><i class="fas fa-plug"></i></div>
+        <span class="nav-label">FTP Accounts</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">FTP</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('ftp',this)"><div class="sub-dot"></div>FTP Accounts</div>
+        <div class="sub-link" onclick="navigate('ftp-logs',this)"><div class="sub-dot"></div>FTP Logs</div>
+      </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="sidebar-section-label">Admin</div>
+
+    <div class="nav-item" id="nav-security">
+      <div class="nav-link" onclick="toggleMenu('nav-security')">
+        <div class="nav-icon"><i class="fas fa-lock"></i></div>
+        <span class="nav-label">Security</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Security</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('security',this)"><div class="sub-dot"></div>Firewall Manager</div>
+        <div class="sub-link" onclick="navigate('fail2ban',this)"><div class="sub-dot"></div>Fail2Ban</div>
+        <div class="sub-link" onclick="navigate('malware',this)"><div class="sub-dot"></div>Malware Scanner</div>
+        <div class="sub-link" onclick="navigate('ip-block',this)"><div class="sub-dot"></div>IP Blocking</div>
+        <div class="sub-link" onclick="navigate('modsecurity',this)"><div class="sub-dot"></div>ModSecurity</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-backup">
+      <div class="nav-link" onclick="toggleMenu('nav-backup')">
+        <div class="nav-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+        <span class="nav-label">Backups</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Backups</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('backups',this)"><div class="sub-dot"></div>Backup Manager</div>
+        <div class="sub-link" onclick="navigate('backup-schedule',this)"><div class="sub-dot"></div>Schedules</div>
+        <div class="sub-link" onclick="navigate('backup-restore',this)"><div class="sub-dot"></div>Restore</div>
+        <div class="sub-link" onclick="navigate('backup-remote',this)"><div class="sub-dot"></div>Remote Storage</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-packages">
+      <div class="nav-link" onclick="toggleMenu('nav-packages')">
+        <div class="nav-icon"><i class="fas fa-box-open"></i></div>
+        <span class="nav-label">Hosting Packages</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Packages</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('packages',this)"><div class="sub-dot"></div>All Packages</div>
+        <div class="sub-link" onclick="navigate('resellers',this)"><div class="sub-dot"></div>Reseller Accounts</div>
+        <div class="sub-link" onclick="navigate('users',this)"><div class="sub-dot"></div>Hosting Users</div>
+      </div>
+    </div>
+
+    <div class="nav-item" id="nav-billing">
+      <div class="nav-link" onclick="toggleMenu('nav-billing')">
+        <div class="nav-icon"><i class="fas fa-credit-card"></i></div>
+        <span class="nav-label">Billing</span>
+        <i class="fas fa-chevron-down nav-chevron"></i>
+        <div class="nav-tooltip">Billing</div>
+      </div>
+      <div class="nav-submenu">
+        <div class="sub-link" onclick="navigate('billing',this)"><div class="sub-dot"></div>Invoices</div>
+        <div class="sub-link" onclick="navigate('subscriptions',this)"><div class="sub-dot"></div>Subscriptions</div>
+        <div class="sub-link" onclick="navigate('payments',this)"><div class="sub-dot"></div>Payment Gateway</div>
+      </div>
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-link" onclick="navigate('api',this)">
+        <div class="nav-icon"><i class="fas fa-code"></i></div>
+        <span class="nav-label">API & Webhooks</span>
+        <div class="nav-tooltip">API</div>
+      </div>
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-link" onclick="navigate('notifications',this)">
+        <div class="nav-icon"><i class="fas fa-bell"></i></div>
+        <span class="nav-label">Notifications</span>
+        <div class="nav-tooltip">Alerts</div>
+      </div>
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-link" onclick="navigate('settings-page',this)">
+        <div class="nav-icon"><i class="fas fa-gear"></i></div>
+        <span class="nav-label">Settings</span>
+        <div class="nav-tooltip">Settings</div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="user-avatar">SA</div>
+      <div class="user-info">
+        <div class="user-name">Super Admin</div>
+        <div class="user-role">Administrator</div>
+      </div>
+    </div>
+  </div>
+</aside>

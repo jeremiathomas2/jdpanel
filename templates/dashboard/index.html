@@ -1,0 +1,163 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <!-- ════ DASHBOARD ════ -->
+    <div class="page-view active" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Server Dashboard</div>
+          <div class="page-subtitle">Welcome back, Super Admin — Last login: Today 08:42 AM</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm"><i class="fas fa-rotate"></i> Refresh</button>
+          <button class="btn btn-primary btn-sm"><i class="fas fa-download"></i> Export Report</button>
+        </div>
+      </div>
+
+      <!-- Alerts -->
+      <div class="alert alert-warning" style="margin-bottom:16px"><i class="fas fa-triangle-exclamation"></i> SSL certificate for <strong>example.com</strong> expires in 7 days. <a style="color:inherit;font-weight:800;margin-left:8px">Renew Now →</a></div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card" style="--stat-color:#3B82F6;--icon-bg:rgba(59,130,246,0.12);--icon-color:#60a5fa">
+          <div class="stat-icon"><i class="fas fa-globe"></i></div>
+          <div class="stat-value">1,247</div>
+          <div class="stat-label">Active Websites</div>
+          <div class="stat-trend trend-up"><i class="fas fa-arrow-trend-up"></i> +12 this week</div>
+        </div>
+        <div class="stat-card" style="--stat-color:#10B981;--icon-bg:rgba(16,185,129,0.12);--icon-color:#4ade80">
+          <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+          <div class="stat-value">4,821</div>
+          <div class="stat-label">Email Accounts</div>
+          <div class="stat-trend trend-up"><i class="fas fa-arrow-trend-up"></i> +38 this week</div>
+        </div>
+        <div class="stat-card" style="--stat-color:#8B5CF6;--icon-bg:rgba(139,92,246,0.12);--icon-color:#a78bfa">
+          <div class="stat-icon"><i class="fas fa-database"></i></div>
+          <div class="stat-value">892</div>
+          <div class="stat-label">Databases</div>
+          <div class="stat-trend trend-up"><i class="fas fa-arrow-trend-up"></i> +6 this week</div>
+        </div>
+        <div class="stat-card" style="--stat-color:#F59E0B;--icon-bg:rgba(245,158,11,0.12);--icon-color:#fbbf24">
+          <div class="stat-icon"><i class="fas fa-shield-halved"></i></div>
+          <div class="stat-value">98.3%</div>
+          <div class="stat-label">SSL Coverage</div>
+          <div class="stat-trend trend-down"><i class="fas fa-arrow-trend-down"></i> 14 need renewal</div>
+        </div>
+        <div class="stat-card" style="--stat-color:#EF4444;--icon-bg:rgba(239,68,68,0.12);--icon-color:#f87171">
+          <div class="stat-icon"><i class="fas fa-microchip"></i></div>
+          <div class="stat-value">34%</div>
+          <div class="stat-label">CPU Usage</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:34%;background:linear-gradient(90deg,#3B82F6,#60a5fa)"></div></div>
+        </div>
+        <div class="stat-card" style="--stat-color:#06B6D4;--icon-bg:rgba(6,182,212,0.12);--icon-color:#22d3ee">
+          <div class="stat-icon"><i class="fas fa-memory"></i></div>
+          <div class="stat-value">62%</div>
+          <div class="stat-label">RAM Usage</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:62%;background:linear-gradient(90deg,#06B6D4,#38bdf8)"></div></div>
+        </div>
+        <div class="stat-card" style="--stat-color:#EC4899;--icon-bg:rgba(236,72,153,0.12);--icon-color:#f472b6">
+          <div class="stat-icon"><i class="fas fa-hard-drive"></i></div>
+          <div class="stat-value">71%</div>
+          <div class="stat-label">Disk Usage</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:71%;background:linear-gradient(90deg,#EC4899,#f472b6)"></div></div>
+        </div>
+        <div class="stat-card" style="--stat-color:#4ade80;--icon-bg:rgba(74,222,128,0.12);--icon-color:#4ade80">
+          <div class="stat-icon"><i class="fas fa-clock"></i></div>
+          <div class="stat-value">99.97%</div>
+          <div class="stat-label">Uptime (30d)</div>
+          <div class="stat-trend trend-up"><i class="fas fa-circle-check"></i> All services running</div>
+        </div>
+      </div>
+
+      <!-- Services + Activity -->
+      <div class="grid-2" style="margin-bottom:24px">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-server" style="color:var(--accent);margin-right:8px"></i>Service Status</div>
+            <button class="btn btn-outline btn-sm">Manage</button>
+          </div>
+          <div class="card-body">
+            <div class="service-grid">
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Apache</div><div class="service-status">Running</div></div></div>
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">MySQL</div><div class="service-status">Running</div></div></div>
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Redis</div><div class="service-status">Running</div></div></div>
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Postfix</div><div class="service-status">Running</div></div></div>
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Dovecot</div><div class="service-status">Running</div></div></div>
+              <div class="service-card"><div class="service-dot dot-yellow"></div><div><div class="service-name">BIND9</div><div class="service-status">Warning</div></div></div>
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Pure-FTPd</div><div class="service-status">Running</div></div></div>
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Fail2Ban</div><div class="service-status">Active</div></div></div>
+              <div class="service-card"><div class="service-dot dot-green"></div><div><div class="service-name">Celery</div><div class="service-status">Running</div></div></div>
+              <div class="service-card"><div class="service-dot dot-red"></div><div><div class="service-name">SpamAssassin</div><div class="service-status">Stopped</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-clock-rotate-left" style="color:var(--accent);margin-right:8px"></i>Recent Activity</div>
+            <span style="font-size:11px;font-weight:700;color:var(--accent);cursor:pointer">View All</span>
+          </div>
+          <div class="card-body" style="padding-top:8px">
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(59,130,246,0.12);color:#60a5fa"><i class="fas fa-user-plus"></i></div>
+              <div><div class="activity-text">New account created: johndoe@example.com</div><div class="activity-time">2 min ago</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(74,222,128,0.12);color:#4ade80"><i class="fas fa-shield-halved"></i></div>
+              <div><div class="activity-text">SSL installed for shop.example.com</div><div class="activity-time">18 min ago</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(251,191,36,0.12);color:#fbbf24"><i class="fas fa-triangle-exclamation"></i></div>
+              <div><div class="activity-text">Fail2Ban blocked IP 192.168.1.45</div><div class="activity-time">1 hr ago</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(16,185,129,0.12);color:#4ade80"><i class="fas fa-cloud-arrow-up"></i></div>
+              <div><div class="activity-text">Backup completed — 2.3 GB archived</div><div class="activity-time">2 hr ago</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:rgba(139,92,246,0.12);color:#a78bfa"><i class="fas fa-database"></i></div>
+              <div><div class="activity-text">Database wp_prod created by admin</div><div class="activity-time">4 hr ago</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resource Usage -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-gauge-high" style="color:var(--accent);margin-right:8px"></i>Resource Usage</div>
+            <span class="badge badge-success"><i class="fas fa-circle" style="font-size:7px"></i> Normal</span>
+          </div>
+          <div class="card-body">
+            <div class="resource-row"><span class="resource-label">CPU</span><div class="resource-bar"><div class="resource-bar-fill" style="width:34%;background:linear-gradient(90deg,#3B82F6,#60a5fa)"></div></div><span class="resource-val">34%</span></div>
+            <div class="resource-row"><span class="resource-label">Memory</span><div class="resource-bar"><div class="resource-bar-fill" style="width:62%;background:linear-gradient(90deg,#8B5CF6,#a78bfa)"></div></div><span class="resource-val">62%</span></div>
+            <div class="resource-row"><span class="resource-label">Disk</span><div class="resource-bar"><div class="resource-bar-fill" style="width:71%;background:linear-gradient(90deg,#EC4899,#f472b6)"></div></div><span class="resource-val">71%</span></div>
+            <div class="resource-row"><span class="resource-label">Swap</span><div class="resource-bar"><div class="resource-bar-fill" style="width:12%;background:linear-gradient(90deg,#06B6D4,#38bdf8)"></div></div><span class="resource-val">12%</span></div>
+            <div class="resource-row"><span class="resource-label">Network ↑</span><div class="resource-bar"><div class="resource-bar-fill" style="width:28%;background:linear-gradient(90deg,#10B981,#4ade80)"></div></div><span class="resource-val">28%</span></div>
+            <div class="resource-row"><span class="resource-label">Network ↓</span><div class="resource-bar"><div class="resource-bar-fill" style="width:45%;background:linear-gradient(90deg,#F59E0B,#fbbf24)"></div></div><span class="resource-val">45%</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-server" style="color:var(--accent);margin-right:8px"></i>Server Information</div>
+          </div>
+          <div class="card-body">
+            <table style="font-size:13px">
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;width:140px;font-weight:700">Hostname</td><td style="border:none;font-weight:700">srv01.jdpanel.io</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">OS</td><td style="border:none;font-weight:700">Ubuntu 22.04 LTS</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">Kernel</td><td style="border:none;font-weight:700">6.5.0-25-generic</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">CPU</td><td style="border:none;font-weight:700">Intel Xeon E5-2680 × 8</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">RAM</td><td style="border:none;font-weight:700">32 GB DDR4</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">Storage</td><td style="border:none;font-weight:700">2 TB NVMe SSD</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">IP Address</td><td style="border:none;font-weight:700">45.33.32.156</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">Uptime</td><td style="border:none;font-weight:700">47 days, 12:34:22</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">Django</td><td style="border:none;font-weight:700">5.0.4</td></tr>
+              <tr><td style="color:var(--text-muted);padding:6px 0;border:none;font-weight:700">PHP</td><td style="border:none;font-weight:700">8.3.x</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
